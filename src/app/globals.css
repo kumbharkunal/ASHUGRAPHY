@@ -32,7 +32,7 @@
   --color-ig-4: #962fbf;
   --color-ig-5: #4f5bd5;
 
-  --text-hero: clamp(3rem, 0.9rem + 8.6vw, 10.5rem);
+  --text-hero: clamp(3rem, 0.9rem + 8.6vw, 9rem);
   --text-hero--line-height: 0.92;
   --text-hero--letter-spacing: -0.035em;
   --text-display: clamp(2.5rem, 1.2rem + 4.6vw, 6.5rem);
@@ -583,9 +583,13 @@ html:not(.deva-ready) {
     pointer-events: none;
   }
 
+  /* Scrims are flat at full strength under the copy and fade only where no text sits; their
+     strengths come from images.ts and are proven by tests/contrast-over-image.spec.ts.
+     Landscape: a light band for the nav, one deep band under the copy block (eyebrow to readout)
+     and a side band behind the left-aligned lines. */
   .hero-scrim--top {
     top: 0;
-    height: 42%;
+    height: 28%;
     background: linear-gradient(to bottom, rgb(var(--ink-rgb) / var(--scrim-top-landscape)), transparent);
   }
 
@@ -595,7 +599,20 @@ html:not(.deva-ready) {
     background: linear-gradient(
       to top,
       rgb(var(--ink-rgb) / var(--scrim-bottom-landscape)) 0%,
-      rgb(var(--ink-rgb) / calc(var(--scrim-bottom-landscape) * 0.62)) 42%,
+      rgb(var(--ink-rgb) / var(--scrim-bottom-landscape)) 62%,
+      rgb(var(--ink-rgb) / calc(var(--scrim-bottom-landscape) * 0.8)) 80%,
+      transparent 100%
+    );
+  }
+
+  .hero-scrim--side {
+    inset-block: 0;
+    right: auto;
+    width: 70%;
+    background: linear-gradient(
+      to right,
+      rgb(var(--ink-rgb) / var(--scrim-side-landscape)) 0%,
+      rgb(var(--ink-rgb) / var(--scrim-side-landscape)) 40%,
       transparent 100%
     );
   }
@@ -610,24 +627,41 @@ html:not(.deva-ready) {
       object-position: var(--hero-pos-portrait);
     }
 
+    /* Portrait: the title sits at the top and the sub and buttons at the bottom; the couple keeps
+       the clear middle. */
     .hero-scrim--top {
-      height: 50%;
+      height: 52%;
       background: linear-gradient(
         to bottom,
         rgb(var(--ink-rgb) / var(--scrim-top-portrait)) 0%,
-        rgb(var(--ink-rgb) / calc(var(--scrim-top-portrait) * 0.6)) 55%,
+        rgb(var(--ink-rgb) / var(--scrim-top-portrait)) 80%,
         transparent 100%
       );
     }
 
     .hero-scrim--bottom {
-      height: 55%;
+      height: 44%;
       background: linear-gradient(
         to top,
         rgb(var(--ink-rgb) / var(--scrim-bottom-portrait)) 0%,
-        rgb(var(--ink-rgb) / calc(var(--scrim-bottom-portrait) * 0.62)) 50%,
+        rgb(var(--ink-rgb) / var(--scrim-bottom-portrait)) 78%,
         transparent 100%
       );
+    }
+
+    .hero-scrim--side {
+      display: none;
+    }
+  }
+
+  /* Short portrait screens: the title runs lower and the sub starts higher. */
+  @media (orientation: portrait) and (max-height: 700px) {
+    .hero-scrim--top {
+      height: 60%;
+    }
+
+    .hero-scrim--bottom {
+      height: 52%;
     }
   }
 

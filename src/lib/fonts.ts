@@ -1,17 +1,19 @@
 import localFont from "next/font/local";
 import { DM_Mono, Hanken_Grotesk, Tiro_Devanagari_Marathi } from "next/font/google";
 import { zodiakItalic } from "./fonts-italic";
+import { zodiakRegular } from "./fonts-regular";
 
-export { zodiakItalic };
+export { zodiakItalic, zodiakRegular };
 
 /**
- * Zodiak (Fontshare, ITF Free Font License). The official variable roman is preloaded: it carries
- * every display weight. The files come from scripts/fetch-fonts.mjs and are never committed.
- * Both Zodiak calls declare the same family, so italic text picks the Light Italic face that
- * src/lib/fonts-italic.ts adds without preloading it.
+ * Zodiak (Fontshare, ITF Free Font License), as the official static faces rather than the
+ * variable font: every engine renders a static face exactly as drawn (an engine that ignores the
+ * weight axis would show the variable font's heaviest master). Light carries all the display type
+ * and is the only one preloaded; Regular and Light Italic join the same "zodiak" family from
+ * their own modules. The files come from scripts/fetch-fonts.mjs and are never committed.
  */
 export const zodiak = localFont({
-  src: [{ path: "../fonts/vendor/Zodiak-Variable.woff2", weight: "100 900", style: "normal" }],
+  src: [{ path: "../fonts/vendor/Zodiak-Light.woff2", weight: "300", style: "normal" }],
   variable: "--font-zodiak",
   display: "swap",
   preload: true,
@@ -46,6 +48,7 @@ export const tiro = Tiro_Devanagari_Marathi({
 
 export const fontVariables = [
   zodiak.variable,
+  zodiakRegular.variable,
   zodiakItalic.variable,
   hanken.variable,
   dmMono.variable,

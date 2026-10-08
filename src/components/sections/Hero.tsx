@@ -42,6 +42,7 @@ export function Hero() {
     "--hero-blur-portrait": `url("${mobile.src.blurDataURL}")`,
     "--scrim-top-landscape": String(desktop.scrim?.top ?? 0.4),
     "--scrim-bottom-landscape": String(desktop.scrim?.bottom ?? 0.7),
+    "--scrim-side-landscape": String(desktop.scrim?.side ?? 0.3),
     "--scrim-top-portrait": String(mobile.scrim?.top ?? 0.6),
     "--scrim-bottom-portrait": String(mobile.scrim?.bottom ?? 0.75),
   } as CSSProperties;
@@ -66,6 +67,7 @@ export function Hero() {
             </div>
             <div data-hero-scrim aria-hidden="true" className="hero-scrim hero-scrim--top" />
             <div data-hero-scrim aria-hidden="true" className="hero-scrim hero-scrim--bottom" />
+            <div data-hero-scrim aria-hidden="true" className="hero-scrim hero-scrim--side" />
             <CropMarks offset="1.25rem" color="rgb(var(--ivory-rgb) / 0.7)" className="hidden md:block" />
           </div>
 

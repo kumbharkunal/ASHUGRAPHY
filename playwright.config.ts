@@ -27,7 +27,14 @@ export default defineConfig({
     timeout: 120_000,
   },
   projects: [
-    { name: "chromium", use: { ...devices["Desktop Chrome"] } },
+    // SwiftShader gives every run the same software WebGL (and no GPU driver chatter in the console).
+    {
+      name: "chromium",
+      use: {
+        ...devices["Desktop Chrome"],
+        launchOptions: { args: ["--use-angle=swiftshader", "--enable-unsafe-swiftshader"] },
+      },
+    },
     { name: "webkit", use: { ...devices["Desktop Safari"] } },
   ],
 });

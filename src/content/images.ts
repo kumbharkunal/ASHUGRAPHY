@@ -35,8 +35,12 @@ export interface Photo {
   exif: Exif;
   /** Focal point in percent; drives object-position so subjects are never cropped out. */
   focal: { x: number; y: number };
-  /** Ink scrim strength (0 to 1) for text laid over the photo; tuned by the contrast test. */
-  scrim?: { top: number; bottom: number };
+  /**
+   * Ink scrim strengths (0 to 1) for text laid over the photo: top band, bottom band and, on wide
+   * screens, a side band behind the left-aligned lines. Tune them with
+   * tests/contrast-over-image.spec.ts whenever the photo changes (as light as the test allows).
+   */
+  scrim?: { top: number; bottom: number; side?: number };
 }
 
 export const photos = {
@@ -46,7 +50,7 @@ export const photos = {
     title: "Golden hour",
     exif: { lens: "85mm", aperture: "f/1.8", shutter: "1/400", iso: 200 },
     focal: { x: 70, y: 45 },
-    scrim: { top: 0.42, bottom: 0.7 },
+    scrim: { top: 0.42, bottom: 0.54, side: 0.35 },
   },
   heroMobile: {
     src: heroMobile,
@@ -54,7 +58,7 @@ export const photos = {
     title: "Golden hour",
     exif: { lens: "85mm", aperture: "f/1.8", shutter: "1/400", iso: 200 },
     focal: { x: 50, y: 58 },
-    scrim: { top: 0.62, bottom: 0.76 },
+    scrim: { top: 0.56, bottom: 0.6 },
   },
   storyHaldi: {
     src: storyHaldi,

@@ -18,7 +18,8 @@ const CACHE_ZIP = path.join(CACHE_DIR, "Zodiak_Complete.zip");
 
 /** zip entry path -> file name written to src/fonts/vendor */
 const WANTED = {
-  "Zodiak_Complete/Fonts/WEB/fonts/Zodiak-Variable.woff2": "Zodiak-Variable.woff2",
+  "Zodiak_Complete/Fonts/WEB/fonts/Zodiak-Light.woff2": "Zodiak-Light.woff2",
+  "Zodiak_Complete/Fonts/WEB/fonts/Zodiak-Regular.woff2": "Zodiak-Regular.woff2",
   "Zodiak_Complete/Fonts/WEB/fonts/Zodiak-LightItalic.woff2": "Zodiak-LightItalic.woff2",
   "Zodiak_Complete/Fonts/WEB/fonts/Zodiak-Light.ttf": "Zodiak-Light.ttf",
   "Zodiak_Complete/Fonts/WEB/fonts/Zodiak-LightItalic.ttf": "Zodiak-LightItalic.ttf",

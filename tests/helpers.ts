@@ -22,6 +22,8 @@ export async function contextFor(
   const touch = width < 1024;
   const context = await browser.newContext({
     viewport: { width, height: heightFor(width) },
+    // The screen matches the viewport, as on a real device (media queries and preloads read it).
+    screen: { width, height: heightFor(width) },
     deviceScaleFactor: 1,
     hasTouch: touch,
     isMobile: touch && browser.browserType().name() === "chromium",
@@ -54,6 +56,25 @@ export async function scrollThrough(page: Page, step = 0.8) {
   for (let y = 0; y < total; y += Math.round(viewport * step)) {
     await page.mouse.wheel(0, Math.round(viewport * step));
     await page.waitForTimeout(120);
+  }
+  // Let the smooth scroll finish first, otherwise it carries on towards the bottom.
+  await waitForScrollToSettle(page);
+  for (let attempt = 0; attempt < 5; attempt += 1) {
+    await page.evaluate(() => window.scrollTo({ top: 0, behavior: "instant" }));
+    await waitForScrollToSettle(page);
+    if ((await page.evaluate(() => window.scrollY)) === 0) break;
+  }
+  await page.waitForTimeout(600);
+}
+
+/** Resolves once the scroll position has stopped changing. */
+export async function waitForScrollToSettle(page: Page) {
+  let last = -1;
+  for (let check = 0; check < 40; check += 1) {
+    const current = await page.evaluate(() => window.scrollY);
+    if (current === last) return;
+    last = current;
+    await page.waitForTimeout(150);
   }
 }
 
