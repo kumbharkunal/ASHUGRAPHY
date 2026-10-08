@@ -1,0 +1,58 @@
+{
+  "name": "ashugraphy",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Ashugraphy wedding photography and films: homepage demo.",
+  "engines": {
+    "node": ">=20.9.0"
+  },
+  "scripts": {
+    "predev": "node scripts/fetch-fonts.mjs && node scripts/ensure-images.mjs",
+    "dev": "next dev",
+    "prebuild": "node scripts/fetch-fonts.mjs && node scripts/ensure-images.mjs",
+    "build": "next build",
+    "build:indexable": "cross-env NEXT_PUBLIC_DEMO_MODE=false npm run build",
+    "start": "next start",
+    "start:qa": "next start --port 3107",
+    "lint": "eslint . --max-warnings=0",
+    "typecheck": "next typegen && tsc --noEmit",
+    "fonts:fetch": "node scripts/fetch-fonts.mjs",
+    "images:ensure": "node scripts/ensure-images.mjs",
+    "images:check": "node scripts/check-images.mjs",
+    "grain": "node scripts/make-grain.mjs",
+    "preflight": "node scripts/preflight.mjs",
+    "test:e2e": "playwright test",
+    "shots": "playwright test tests/screens.spec.ts",
+    "lh:mobile": "npx --yes lighthouse@13.5.0 http://localhost:3107 --output=json --output=html --output-path=./.lighthouse/mobile --chrome-flags=\"--headless=new\" --quiet",
+    "lh:desktop": "npx --yes lighthouse@13.5.0 http://localhost:3107 --preset=desktop --output=json --output=html --output-path=./.lighthouse/desktop --chrome-flags=\"--headless=new\" --quiet",
+    "qa": "npm run lint && npm run typecheck && npm run preflight && npm run images:check"
+  },
+  "dependencies": {
+    "@gsap/react": "2.1.2",
+    "@phosphor-icons/react": "2.1.10",
+    "@vercel/speed-insights": "2.0.0",
+    "gsap": "3.15.0",
+    "lenis": "1.3.26",
+    "motion": "14.0.0",
+    "next": "16.4.0",
+    "ogl": "1.0.11",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "sharp": "0.35.5",
+    "simple-icons": "16.34.0"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "4.13.0",
+    "@playwright/test": "1.64.0",
+    "@tailwindcss/turbopack": "4.3.3",
+    "@types/node": "22.20.5",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "cross-env": "10.1.0",
+    "eslint": "9.39.5",
+    "eslint-config-next": "16.4.0",
+    "schema-dts": "2.1.0",
+    "tailwindcss": "4.3.3",
+    "typescript": "6.0.3"
+  }
+}

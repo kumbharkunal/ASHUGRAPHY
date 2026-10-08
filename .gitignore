@@ -1,0 +1,57 @@
+# dependencies
+/node_modules
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# testing and QA output
+/coverage
+/playwright-report/
+/test-results/
+/playwright/.cache/
+/.lighthouse/
+/qa-output/
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# env files (.env.example is committed, real values never are)
+.env*
+!.env.example
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# Zodiak is downloaded at build time from Fontshare (ITF FFL forbids redistribution)
+/src/fonts/vendor/
+
+# original image sources are kept locally; the converted .webp slots are committed
+/images/*.png
+/images/*.jpg
+/images/*.jpeg
+/images/*.PNG
+/images/*.JPG
+/images/*.JPEG
+/images/*.tmp

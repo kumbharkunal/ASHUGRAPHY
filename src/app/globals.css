@@ -1,0 +1,514 @@
+@import "tailwindcss";
+
+/*
+  Ashugraphy design tokens. "A darkroom in daylight."
+  Light theme only. The single accent is sindoor (the darkroom safelight, the colour of kumkum).
+  Brass is for hairlines, crop marks and ornaments, never for text.
+  Keep src/lib/tokens.ts in sync for places that cannot read CSS (metadata, OG image, icons).
+*/
+@theme {
+  --color-*: initial;
+  --color-paper: #f4ede1;
+  --color-paper-deep: #ebe2d3;
+  --color-ivory: #fbf8f2;
+  --color-ink: #1e1a16;
+  --color-ink-soft: #5e554b;
+  --color-sindoor: #9c3b2a;
+  --color-sindoor-deep: #7f2e21;
+  --color-brass: #b08d57;
+  --color-line: rgb(30 26 22 / 0.12);
+  --color-line-strong: rgb(30 26 22 / 0.55);
+  --color-transparent: transparent;
+  --color-current: currentColor;
+
+  /* Brand marks: only ever used inside their official logos. */
+  --color-wa-green: #25d366;
+  --color-wa-black: #111b21;
+  --color-fb-blue: #0866ff;
+  --color-fb-f: #ffffff;
+  --color-ig-1: #feda75;
+  --color-ig-2: #fa7e1e;
+  --color-ig-3: #d62976;
+  --color-ig-4: #962fbf;
+  --color-ig-5: #4f5bd5;
+
+  --text-hero: clamp(3rem, 0.9rem + 8.6vw, 10.5rem);
+  --text-hero--line-height: 0.92;
+  --text-hero--letter-spacing: -0.035em;
+  --text-display: clamp(2.5rem, 1.2rem + 4.6vw, 6.5rem);
+  --text-display--line-height: 0.98;
+  --text-display--letter-spacing: -0.025em;
+  --text-lead: clamp(1.625rem, 0.9rem + 2.9vw, 4rem);
+  --text-lead--line-height: 1.12;
+  --text-lead--letter-spacing: -0.015em;
+  --text-h3: clamp(1.5rem, 1.1rem + 1.4vw, 2.5rem);
+  --text-h3--line-height: 1.15;
+  --text-h3--letter-spacing: -0.01em;
+  --text-body-lg: clamp(1.0625rem, 1rem + 0.35vw, 1.25rem);
+  --text-body-lg--line-height: 1.55;
+  --text-body: clamp(1rem, 0.96rem + 0.2vw, 1.125rem);
+  --text-body--line-height: 1.6;
+  --text-sm: 0.875rem;
+  --text-sm--line-height: 1.5;
+  --text-caption: 0.75rem;
+  --text-caption--line-height: 1.4;
+  --text-caption--letter-spacing: 0.06em;
+
+  --radius-pill: 999px;
+  --radius-sheet: 28px;
+  --radius-card: 22px;
+  --radius-card-inner: 16px;
+  --radius-field: 14px;
+  --radius-print: 18px;
+
+  --ease-cinematic: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-ui: cubic-bezier(0.32, 0.72, 0, 1);
+  --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
+  --ease-exit: cubic-bezier(0.5, 0, 0.75, 0);
+
+  --shadow-glass: 0 8px 32px rgb(30 26 22 / 0.08);
+  --shadow-card: inset 0 1px 0 rgb(255 255 255 / 0.6), 0 18px 48px -28px rgb(30 26 22 / 0.28);
+  --shadow-fab: 0 10px 30px -10px rgb(30 26 22 / 0.45);
+}
+
+@theme inline {
+  --font-display: var(--font-zodiak), "Times New Roman", serif;
+  --font-sans: var(--font-hanken), Arial, sans-serif;
+  --font-mono: var(--font-dm-mono), ui-monospace, "SFMono-Regular", monospace;
+  --font-deva: var(--font-tiro), "Noto Serif Devanagari", serif;
+}
+
+:root {
+  --paper-rgb: 244 237 225;
+  --paper-deep-rgb: 235 226 211;
+  --ivory-rgb: 251 248 242;
+  --ink-rgb: 30 26 22;
+  --sindoor-rgb: 156 59 42;
+  --brass-rgb: 176 141 87;
+
+  --gutter: clamp(1rem, 0.6rem + 1.8vw, 2.5rem);
+  --section-y: clamp(6rem, 3rem + 9vw, 12rem);
+  --container: 90rem;
+
+  --nav-h: 3.75rem;
+  --nav-top: calc(12px + env(safe-area-inset-top));
+  --nav-offset: calc(var(--nav-h) + 12px + env(safe-area-inset-top) + 16px);
+
+  --dur-micro: 180ms;
+  --dur-ui: 400ms;
+  --dur-reveal: 1100ms;
+
+  /* Layer scale. Dialogs use the native top layer. */
+  --z-float: 20;
+  --z-fab: 60;
+  --z-nav: 70;
+  --z-backdrop: 80;
+  --z-sheet: 90;
+  --z-grain: 95;
+  --z-cursor: 96;
+  --z-preloader: 100;
+
+  --focus-ring: var(--color-ink);
+}
+
+@layer base {
+  html {
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    scroll-padding-top: var(--nav-offset);
+    font-synthesis: none;
+  }
+
+  body {
+    min-height: 100svh;
+    background-color: var(--color-paper);
+    font-family: var(--font-sans);
+    font-size: var(--text-body);
+    line-height: var(--text-body--line-height);
+    font-weight: 450;
+    font-kerning: normal;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: clip;
+  }
+
+  ::selection {
+    background-color: rgb(var(--sindoor-rgb) / 0.2);
+    color: var(--color-ink);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 3px;
+  }
+
+  [data-tone="dark"] {
+    --focus-ring: var(--color-ivory);
+  }
+
+  em,
+  i {
+    font-style: italic;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  button {
+    cursor: pointer;
+  }
+
+  button:disabled {
+    cursor: not-allowed;
+  }
+
+  img,
+  svg,
+  video,
+  canvas {
+    display: block;
+  }
+
+  [lang="sa"],
+  [lang="mr"] {
+    font-family: var(--font-deva);
+  }
+}
+
+/* No flash of unstyled content. Reveal targets are hidden only when JS runs; GSAP reveals them
+   with autoAlpha. If GSAP never initialises (it adds .gsap-ready), a CSS failsafe shows them. */
+.js [data-reveal] {
+  visibility: hidden;
+}
+
+.js:not(.gsap-ready) [data-reveal] {
+  animation: reveal-failsafe 0.4s var(--ease-ui) 3s forwards;
+}
+
+@keyframes reveal-failsafe {
+  from {
+    visibility: visible;
+    opacity: 0;
+  }
+  to {
+    visibility: visible;
+    opacity: 1;
+  }
+}
+
+@layer components {
+  .container-page {
+    width: 100%;
+    max-width: var(--container);
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+  }
+
+  .section-y {
+    padding-block: var(--section-y);
+  }
+
+  .skip-link {
+    position: fixed;
+    top: calc(var(--nav-top) + 4px);
+    left: 50%;
+    z-index: calc(var(--z-preloader) + 1);
+    translate: -50% -200%;
+    padding: 0.75rem 1.25rem;
+    border-radius: var(--radius-pill);
+    background-color: var(--color-ink);
+    color: var(--color-ivory);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    transition: translate var(--dur-ui) var(--ease-ui);
+  }
+
+  .skip-link:focus-visible {
+    translate: -50% 0;
+    outline-color: var(--color-sindoor);
+  }
+
+  /* Glass pill: a constant blur layer plus two tint layers that cross-fade by tone.
+     The blur radius is never animated. */
+  .glass {
+    position: relative;
+    isolation: isolate;
+    border-radius: var(--radius-pill);
+    box-shadow:
+      0 0 0 1px var(--color-line),
+      var(--shadow-glass);
+  }
+
+  .glass__blur,
+  .glass__tint {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    pointer-events: none;
+  }
+
+  .glass__blur {
+    -webkit-backdrop-filter: blur(18px) saturate(1.4);
+    backdrop-filter: blur(18px) saturate(1.4);
+  }
+
+  .glass__tint {
+    transition: opacity 350ms var(--ease-ui);
+  }
+
+  .glass__tint--light {
+    background-color: rgb(var(--ivory-rgb) / 0.6);
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.5);
+  }
+
+  .glass__tint--dark {
+    background-color: rgb(var(--ink-rgb) / 0.66);
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.12);
+    opacity: 0;
+  }
+
+  [data-tone="dark"] .glass__tint--light {
+    opacity: 0;
+  }
+
+  [data-tone="dark"] .glass__tint--dark {
+    opacity: 1;
+  }
+
+  @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    .glass__tint--light {
+      background-color: rgb(var(--ivory-rgb) / 0.92);
+    }
+    .glass__tint--dark {
+      background-color: rgb(var(--ink-rgb) / 0.9);
+    }
+  }
+
+  @media (prefers-reduced-transparency: reduce) {
+    .glass__blur {
+      -webkit-backdrop-filter: none;
+      backdrop-filter: none;
+    }
+    .glass__tint--light {
+      background-color: rgb(var(--ivory-rgb) / 0.96);
+    }
+    .glass__tint--dark {
+      background-color: rgb(var(--ink-rgb) / 0.94);
+    }
+  }
+
+  /* Film grain: compositor-only flicker (transform steps), static under reduced motion. */
+  .grain {
+    position: fixed;
+    inset: 0;
+    z-index: var(--z-grain);
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .grain::before {
+    content: "";
+    position: absolute;
+    inset: -50%;
+    background-image: url("/grain.png");
+    background-size: 128px 128px;
+    opacity: 0.045;
+    animation: grain-flicker 1s steps(8) infinite;
+  }
+
+  @keyframes grain-flicker {
+    0% {
+      transform: translate3d(0, 0, 0);
+    }
+    12.5% {
+      transform: translate3d(-4%, -6%, 0);
+    }
+    25% {
+      transform: translate3d(5%, 3%, 0);
+    }
+    37.5% {
+      transform: translate3d(-7%, 4%, 0);
+    }
+    50% {
+      transform: translate3d(3%, -5%, 0);
+    }
+    62.5% {
+      transform: translate3d(-3%, 7%, 0);
+    }
+    75% {
+      transform: translate3d(6%, -2%, 0);
+    }
+    87.5% {
+      transform: translate3d(-5%, -3%, 0);
+    }
+    100% {
+      transform: translate3d(0, 0, 0);
+    }
+  }
+
+  /* Page background drift between paper and paper-deep: opacity of a fixed layer only. */
+  .page-bg {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background-color: var(--color-paper-deep);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 900ms var(--ease-ui);
+  }
+
+  .page-bg[data-active="true"] {
+    opacity: 1;
+  }
+
+  /* Links draw their underline from the left and retract to the right. */
+  .link-draw {
+    position: relative;
+    display: inline-block;
+  }
+
+  .link-draw::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -0.12em;
+    height: 1px;
+    background-color: currentColor;
+    transform: scaleX(0);
+    transform-origin: right center;
+    transition: transform 420ms var(--ease-cinematic);
+  }
+
+  .link-draw:hover::after,
+  .link-draw:focus-visible::after,
+  .link-draw[aria-current="true"]::after {
+    transform: scaleX(1);
+    transform-origin: left center;
+  }
+
+  /* Button label roll: two stacked copies of the label, pure CSS so it works before hydration. */
+  .label-roll {
+    position: relative;
+    display: inline-grid;
+    overflow: hidden;
+    line-height: 1.2;
+  }
+
+  .label-roll > span {
+    grid-area: 1 / 1;
+    transition: transform 450ms var(--ease-cinematic);
+  }
+
+  .label-roll > span + span {
+    transform: translateY(105%);
+  }
+
+  .group:hover .label-roll > span:first-child,
+  .group:focus-visible .label-roll > span:first-child {
+    transform: translateY(-105%);
+  }
+
+  .group:hover .label-roll > span + span,
+  .group:focus-visible .label-roll > span + span {
+    transform: translateY(0);
+  }
+
+  /* SplitText line masks keep italic descenders (the y in "stay") unclipped. */
+  .split-line-mask {
+    padding-block: 0.08em 0.18em;
+    margin-block: -0.08em -0.18em;
+  }
+
+  /* Thin brass crop marks at the corners of a frame. */
+  .crop-marks {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  .crop-mark {
+    position: absolute;
+    width: 1.25rem;
+    height: 1.25rem;
+    border-color: var(--crop-color, var(--color-brass));
+    border-style: solid;
+    border-width: 0;
+  }
+
+  .crop-mark--tl {
+    top: calc(var(--crop-offset, -0.75rem));
+    left: calc(var(--crop-offset, -0.75rem));
+    border-top-width: 1px;
+    border-left-width: 1px;
+    transform-origin: top left;
+  }
+
+  .crop-mark--tr {
+    top: calc(var(--crop-offset, -0.75rem));
+    right: calc(var(--crop-offset, -0.75rem));
+    border-top-width: 1px;
+    border-right-width: 1px;
+    transform-origin: top right;
+  }
+
+  .crop-mark--bl {
+    bottom: calc(var(--crop-offset, -0.75rem));
+    left: calc(var(--crop-offset, -0.75rem));
+    border-bottom-width: 1px;
+    border-left-width: 1px;
+    transform-origin: bottom left;
+  }
+
+  .crop-mark--br {
+    bottom: calc(var(--crop-offset, -0.75rem));
+    right: calc(var(--crop-offset, -0.75rem));
+    border-bottom-width: 1px;
+    border-right-width: 1px;
+    transform-origin: bottom right;
+  }
+
+  .sr-only-focusable:not(:focus):not(:focus-within) {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .grain::before {
+    animation: none;
+  }
+
+  .label-roll > span {
+    transition: none;
+  }
+
+  .group:hover .label-roll > span:first-child,
+  .group:focus-visible .label-roll > span:first-child {
+    transform: none;
+  }
+
+  .group:hover .label-roll > span + span,
+  .group:focus-visible .label-roll > span + span {
+    transform: translateY(105%);
+  }
+
+  .link-draw::after,
+  .page-bg,
+  .glass__tint {
+    transition-duration: 0.01ms;
+  }
+}
