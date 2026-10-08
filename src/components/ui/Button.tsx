@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { ComponentPropsWithoutRef, ReactNode } from "react";
 import { cx } from "@/lib/utils";
 
@@ -85,6 +86,14 @@ export function Button(props: ButtonProps) {
 
   if (domProps.href !== undefined) {
     const { href, external, ...anchorRest } = domProps as AnchorDomProps;
+    // In-site paths navigate client-side (and still accept onClick, for in-page smooth scrolling).
+    if (href.startsWith("/") && !external) {
+      return (
+        <Link href={href} prefetch={href.includes("#") ? false : undefined} className={classes} {...anchorRest}>
+          {inner}
+        </Link>
+      );
+    }
     return (
       <a
         href={href}

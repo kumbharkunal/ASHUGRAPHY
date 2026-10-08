@@ -9,10 +9,12 @@ import { Process } from "@/components/sections/Process";
 import { Services } from "@/components/sections/Services";
 import { Stories } from "@/components/sections/Stories";
 import { Testimonials } from "@/components/sections/Testimonials";
+import { jsonLdScript, studioJsonLd } from "@/lib/seo";
 
 export default function HomePage() {
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdScript(studioJsonLd()) }} />
       <Preloader />
       <main id="main">
         <Hero />

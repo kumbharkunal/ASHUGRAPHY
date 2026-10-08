@@ -235,6 +235,7 @@ export function MobileMenu({ toggleRef, socialIcons, ctaIcon }: MobileMenuProps)
               <m.li key={link.id} variants={rowVariants} className="border-b border-line">
                 <Link
                   href={`/#${link.id}`}
+                  prefetch={false}
                   onClick={(event) => onLink(event, link.id)}
                   className="group flex items-baseline gap-4 py-3"
                 >

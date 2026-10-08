@@ -1210,6 +1210,15 @@
     text-underline-offset: 3px;
   }
 
+  /* Client-side navigation curtain (template.tsx). Never drawn on the first load. */
+  .route-curtain {
+    position: fixed;
+    inset: 0;
+    z-index: calc(var(--z-preloader) - 2);
+    background-color: var(--color-paper);
+    pointer-events: none;
+  }
+
   /* The booking silk rises out of the paper instead of starting at a hard edge. */
   .booking-backdrop {
     -webkit-mask-image: linear-gradient(to bottom, transparent, #000 min(12rem, 35%));

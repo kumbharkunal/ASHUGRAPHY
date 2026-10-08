@@ -141,6 +141,7 @@ export function Navbar({ ctaIcon, socialIcons }: NavbarProps) {
 
           <Link
             href="/#top"
+            prefetch={false}
             onClick={onHomeLink}
             aria-label={nav.homeLabel}
             className="font-display text-[1.375rem] leading-none tracking-[-0.02em] lg:mr-5"
@@ -155,6 +156,7 @@ export function Navbar({ ctaIcon, socialIcons }: NavbarProps) {
                 <li key={link.id}>
                   <Link
                     href={`/#${link.id}`}
+                    prefetch={false}
                     onClick={(event) => onSectionLink(event, link.id)}
                     aria-current={isActive ? "location" : undefined}
                     className="relative block rounded-pill px-3.5 py-3 text-[0.9375rem] leading-none font-medium"
