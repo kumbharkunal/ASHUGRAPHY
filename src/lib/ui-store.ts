@@ -4,23 +4,17 @@ import { useSyncExternalStore } from "react";
 export interface UIState {
   menuOpen: boolean;
   viewerOpen: boolean;
+  /** The first-visit intro has finished (or was skipped on a repeat visit). */
   preloaderDone: boolean;
-  navTone: "light" | "dark";
-  activeSection: string | null;
-  heroPassed: boolean;
-  bookingInView: boolean;
-  footerInView: boolean;
+  /** The nav may drop in (set by the hero load timeline, or immediately on other pages). */
+  navReady: boolean;
 }
 
 const initialState: UIState = {
   menuOpen: false,
   viewerOpen: false,
   preloaderDone: false,
-  navTone: "dark",
-  activeSection: null,
-  heroPassed: false,
-  bookingInView: false,
-  footerInView: false,
+  navReady: false,
 };
 
 let state: UIState = initialState;

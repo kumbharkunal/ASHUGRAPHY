@@ -1,10 +1,14 @@
 import type { Metadata, Viewport } from "next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { CursorLoader } from "@/components/layout/CursorLoader";
+import { FloatingWhatsApp } from "@/components/layout/FloatingWhatsApp";
 import { GsapBoot } from "@/components/layout/GsapBoot";
 import { Grain } from "@/components/layout/Grain";
+import { Navbar } from "@/components/layout/Navbar";
 import { PageBackground } from "@/components/layout/PageBackground";
 import { SmoothScroll } from "@/components/layout/SmoothScroll";
 import { MotionProvider } from "@/components/motion/MotionProvider";
+import { BrandDefs, BrandIcon } from "@/components/ui/BrandIcon";
 import { nav, seo } from "@/content/site";
 import { isDemo, isVercel, siteUrl } from "@/lib/env";
 import { fontVariables } from "@/lib/fonts";
@@ -59,16 +63,27 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <script dangerouslySetInnerHTML={{ __html: HEAD_SCRIPT }} />
       </head>
       <body>
-        <a href="#main" className="skip-link">
+        <BrandDefs />
+        <a href="#main" className="skip-link" data-inert-with-menu>
           {nav.skipLink}
         </a>
         <MotionProvider>
           <SmoothScroll>
             <PageBackground />
+            <Navbar
+              ctaIcon={<BrandIcon brand="whatsapp" size={18} />}
+              socialIcons={{
+                instagram: <BrandIcon brand="instagram" size={20} />,
+                facebook: <BrandIcon brand="facebook" size={20} />,
+                whatsapp: <BrandIcon brand="whatsapp" size={20} />,
+              }}
+            />
             {children}
+            <FloatingWhatsApp icon={<BrandIcon brand="whatsapp" variant="white" size={28} />} />
           </SmoothScroll>
         </MotionProvider>
         <GsapBoot />
+        <CursorLoader />
         <Grain />
         <noscript>
           <style>{".preloader{display:none!important}"}</style>

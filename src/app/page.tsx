@@ -1,9 +1,12 @@
+import { Preloader } from "@/components/layout/Preloader";
 import { hero, manifesto } from "@/content/site";
 import { photos } from "@/content/images";
 
 export default function HomePage() {
   const exif = photos.heroDesktop.exif;
   return (
+    <>
+    <Preloader />
     <main id="main">
       <section className="container-page section-y" aria-labelledby="hero-title">
         <p className="text-sm font-medium text-ink-soft">{hero.eyebrow}</p>
@@ -28,5 +31,6 @@ export default function HomePage() {
         </p>
       </section>
     </main>
+    </>
   );
 }
