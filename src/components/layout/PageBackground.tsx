@@ -22,6 +22,7 @@ export function PageBackground() {
         ScrollTrigger.create({
           trigger: section,
           start: "top 55%",
+          refreshPriority: -1,
           end: "bottom 55%",
           onToggle: (self) => {
             activeCount = Math.max(0, activeCount + (self.isActive ? 1 : -1));

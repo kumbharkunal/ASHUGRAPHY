@@ -30,6 +30,7 @@ export function FloatingWhatsApp({ icon }: { icon: ReactNode }) {
         ScrollTrigger.create({
           trigger: hero,
           start: "bottom 70%",
+          refreshPriority: -1,
           onEnter: () => setPastHero(true),
           onLeaveBack: () => setPastHero(false),
         });
@@ -44,6 +45,7 @@ export function FloatingWhatsApp({ icon }: { icon: ReactNode }) {
         ScrollTrigger.create({
           trigger: element,
           start: "top 92%",
+          refreshPriority: -1,
           end: "bottom top",
           onToggle: (self) => {
             activeBlockers = Math.max(0, activeBlockers + (self.isActive ? 1 : -1));

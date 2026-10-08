@@ -55,6 +55,7 @@ export function Navbar({ ctaIcon, socialIcons }: NavbarProps) {
       ScrollTrigger.create({
         start: 0,
         end: "max",
+        refreshPriority: -1,
         onUpdate: (self) => {
           const y = self.scroll();
           setCompact(y > 24);
@@ -73,6 +74,7 @@ export function Navbar({ ctaIcon, socialIcons }: NavbarProps) {
           trigger: section,
           start: "top 40px",
           end: "bottom 40px",
+          refreshPriority: -1,
           onToggle: (self) => {
             if (self.isActive) activeTones.set(section, section.dataset.navTone === "dark" ? "dark" : "light");
             else activeTones.delete(section);
@@ -89,6 +91,7 @@ export function Navbar({ ctaIcon, socialIcons }: NavbarProps) {
           trigger: section,
           start: "top 45%",
           end: "bottom 45%",
+          refreshPriority: -1,
           onToggle: (self) => setActive((current) => (self.isActive ? id : current === id ? null : current)),
         });
       });

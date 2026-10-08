@@ -557,6 +557,139 @@
     }
   }
 
+  /* Hero: art-directed photo, blur placeholder underneath, measured scrims per orientation. */
+  .hero-frame {
+    background-color: var(--color-paper-deep);
+    background-image: var(--hero-blur-landscape);
+    background-size: cover;
+    background-position: var(--hero-pos-landscape);
+  }
+
+  .hero-img {
+    object-position: var(--hero-pos-landscape);
+  }
+
+  .hero-scrim {
+    position: absolute;
+    inset-inline: 0;
+    pointer-events: none;
+  }
+
+  .hero-scrim--top {
+    top: 0;
+    height: 42%;
+    background: linear-gradient(to bottom, rgb(var(--ink-rgb) / var(--scrim-top-landscape)), transparent);
+  }
+
+  .hero-scrim--bottom {
+    bottom: 0;
+    height: 72%;
+    background: linear-gradient(
+      to top,
+      rgb(var(--ink-rgb) / var(--scrim-bottom-landscape)) 0%,
+      rgb(var(--ink-rgb) / calc(var(--scrim-bottom-landscape) * 0.62)) 42%,
+      transparent 100%
+    );
+  }
+
+  @media (orientation: portrait) {
+    .hero-frame {
+      background-image: var(--hero-blur-portrait);
+      background-position: var(--hero-pos-portrait);
+    }
+
+    .hero-img {
+      object-position: var(--hero-pos-portrait);
+    }
+
+    .hero-scrim--top {
+      height: 50%;
+      background: linear-gradient(
+        to bottom,
+        rgb(var(--ink-rgb) / var(--scrim-top-portrait)) 0%,
+        rgb(var(--ink-rgb) / calc(var(--scrim-top-portrait) * 0.6)) 55%,
+        transparent 100%
+      );
+    }
+
+    .hero-scrim--bottom {
+      height: 55%;
+      background: linear-gradient(
+        to top,
+        rgb(var(--ink-rgb) / var(--scrim-bottom-portrait)) 0%,
+        rgb(var(--ink-rgb) / calc(var(--scrim-bottom-portrait) * 0.62)) 50%,
+        transparent 100%
+      );
+    }
+  }
+
+  /* LCP-safe opening state: the photo is painted at first render, only inset and scaled. */
+  @media (prefers-reduced-motion: no-preference) {
+    .js .hero-frame {
+      clip-path: inset(8% round 24px);
+    }
+
+    .js .hero-intro {
+      transform: scale(1.15);
+    }
+
+    .js [data-reveal-image] {
+      clip-path: inset(100% 0 0 0);
+    }
+
+    .js [data-ornament] {
+      clip-path: inset(-30% 100% -30% 0);
+    }
+
+    .js:not(.gsap-ready) .hero-frame,
+    .js:not(.gsap-ready) [data-reveal-image],
+    .js:not(.gsap-ready) [data-ornament] {
+      animation: unclip-failsafe 0.6s var(--ease-cinematic) 3s forwards;
+    }
+  }
+
+  /* Marquee edges fade into the paper. */
+  .marquee-mask {
+    -webkit-mask-image: linear-gradient(90deg, transparent, black 6%, black 94%, transparent);
+    mask-image: linear-gradient(90deg, transparent, black 6%, black 94%, transparent);
+  }
+
+  @keyframes unclip-failsafe {
+    to {
+      clip-path: inset(0 0 0 0);
+    }
+  }
+
+  .scroll-cue-line {
+    position: relative;
+    display: block;
+    width: 2.5rem;
+    height: 1px;
+    overflow: hidden;
+    background-color: rgb(var(--ivory-rgb) / 0.35);
+  }
+
+  .scroll-cue-line::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-color: var(--color-ivory);
+    transform: translateX(-100%);
+    animation: scroll-cue 2.6s var(--ease-cinematic) infinite;
+  }
+
+  @keyframes scroll-cue {
+    0% {
+      transform: translateX(-100%);
+    }
+    55% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(100%);
+    }
+  }
+
   .sr-only-focusable:not(:focus):not(:focus-within) {
     position: absolute;
     width: 1px;
@@ -578,6 +711,11 @@
   .fab-pulse {
     animation: none;
     opacity: 0;
+  }
+
+  .scroll-cue-line::after {
+    animation: none;
+    transform: none;
   }
 
   .label-roll > span {
