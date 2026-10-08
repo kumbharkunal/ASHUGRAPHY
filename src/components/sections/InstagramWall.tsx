@@ -16,7 +16,10 @@ export function InstagramWall() {
     <section id="instagram" aria-labelledby="instagram-title" className="relative overflow-x-clip">
       <div className="container-page section-y">
         <div className="flex flex-col items-start gap-8 md:flex-row md:items-end md:justify-between">
-          <SplitHeading id="instagram-title" className="font-display text-display font-light">
+          <SplitHeading
+            id="instagram-title"
+            className="font-display text-[length:min(var(--text-display),11.4vw)] leading-[0.98] font-light tracking-[-0.025em]"
+          >
             {instagram.title}
           </SplitHeading>
           <div data-reveal="up">

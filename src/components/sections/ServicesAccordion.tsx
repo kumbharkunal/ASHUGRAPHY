@@ -63,8 +63,8 @@ export function ServicesAccordion({ icon }: { icon: ReactNode }) {
                   transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
                   className="overflow-hidden"
                 >
-                  <div className="flex gap-4 pb-6 pl-10">
-                    <div className="relative h-30 w-24 shrink-0 overflow-hidden bg-paper-deep">
+                  <div className="grid grid-cols-[4.5rem_minmax(0,1fr)] items-start gap-x-4 gap-y-5 pb-6 pl-10 sm:grid-cols-[6rem_minmax(0,1fr)]">
+                    <div className="relative aspect-[4/5] w-full overflow-hidden bg-paper-deep">
                       <Image
                         src={photo.src}
                         alt=""
@@ -76,13 +76,14 @@ export function ServicesAccordion({ icon }: { icon: ReactNode }) {
                         style={{ objectPosition: objectPosition(photo) }}
                       />
                     </div>
-                    <div className="flex flex-col items-start gap-4">
-                      <p className="text-body text-ink-soft">{service.description}</p>
+                    <p className="text-body text-ink-soft">{service.description}</p>
+                    <div className="col-span-2">
                       <Button
                         href={waLink(waMessages.service(service.enquiry))}
                         external
                         variant="ghost"
                         size="sm"
+                        wrap
                         label={services.askLabel(service.title)}
                         icon={icon}
                         aria-label={`${services.askLabel(service.title)} on WhatsApp (opens in a new tab)`}
