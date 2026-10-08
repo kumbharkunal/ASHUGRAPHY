@@ -3,20 +3,19 @@
 import { useGSAP } from "@gsap/react";
 import { gsap } from "gsap";
 import { CustomEase } from "gsap/CustomEase";
-import { DrawSVGPlugin } from "gsap/DrawSVGPlugin";
 import { ScrambleTextPlugin } from "gsap/ScrambleTextPlugin";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/SplitText";
 
 // Registered exactly once, on the client. Every animated component imports from this module.
 if (typeof window !== "undefined") {
-  gsap.registerPlugin(useGSAP, ScrollTrigger, SplitText, ScrambleTextPlugin, DrawSVGPlugin, CustomEase);
+  gsap.registerPlugin(useGSAP, ScrollTrigger, SplitText, ScrambleTextPlugin, CustomEase);
   CustomEase.create("cinematic", "0.16,1,0.3,1");
   ScrollTrigger.config({ ignoreMobileResize: true });
   gsap.defaults({ duration: 1, ease: "expo.out" });
 }
 
-export { CustomEase, DrawSVGPlugin, gsap, ScrollTrigger, SplitText, useGSAP };
+export { CustomEase, gsap, ScrollTrigger, SplitText, useGSAP };
 
 export const EASE = {
   cinematic: "cinematic",

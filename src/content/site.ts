@@ -361,6 +361,7 @@ export const booking = {
       label: "Wedding date",
       helper: "An approximate date is fine.",
       error: "Choose a date (an approximate one is fine)",
+      pastError: "Choose a date from today onwards",
     },
     city: {
       label: "City",
@@ -374,6 +375,8 @@ export const booking = {
   },
   preview: {
     label: "Your message",
+    /** Shown in the preview until the matching field is filled in. */
+    tokens: { names: "your names", date: "your date", city: "your city" },
   },
   submit: "Check availability on WhatsApp",
   note: "Opens WhatsApp with this message. Nothing is sent until you press send.",
@@ -387,6 +390,7 @@ export const booking = {
 
 export const footer = {
   srHeading: "Contact and links",
+  navLabel: "Footer",
   navigationTitle: "Navigation",
   servicesTitle: "Services",
   connectTitle: "Connect",

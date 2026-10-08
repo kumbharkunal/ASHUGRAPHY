@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { CursorLoader } from "@/components/layout/CursorLoader";
 import { FloatingWhatsApp } from "@/components/layout/FloatingWhatsApp";
+import { Footer } from "@/components/layout/Footer";
 import { GsapBoot } from "@/components/layout/GsapBoot";
 import { Grain } from "@/components/layout/Grain";
 import { Navbar } from "@/components/layout/Navbar";
@@ -79,6 +80,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
               }}
             />
             {children}
+            <Footer />
             <FloatingWhatsApp icon={<BrandIcon brand="whatsapp" variant="white" size={28} />} />
           </SmoothScroll>
         </MotionProvider>

@@ -641,9 +641,14 @@
       clip-path: inset(-30% 100% -30% 0);
     }
 
+    .js [data-step-fill] {
+      clip-path: inset(0 100% 0 0);
+    }
+
     .js:not(.gsap-ready) .hero-frame,
     .js:not(.gsap-ready) [data-reveal-image],
-    .js:not(.gsap-ready) [data-ornament] {
+    .js:not(.gsap-ready) [data-ornament],
+    .js:not(.gsap-ready) [data-step-fill] {
       animation: unclip-failsafe 0.6s var(--ease-cinematic) 3s forwards;
     }
   }
@@ -965,6 +970,265 @@
     }
   }
 
+  /* How we work: outlined numerals that flood with ink, strung on a brass thread. Small screens
+     get a vertical list with the thread down the left edge; large screens a four-step staircase. */
+  .process-track {
+    position: relative;
+    margin-top: clamp(3rem, 2rem + 3vw, 5rem);
+  }
+
+  .process-thread {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    pointer-events: none;
+  }
+
+  .process-thread path {
+    fill: none;
+    stroke-width: 1;
+  }
+
+  .process-thread-track {
+    stroke: rgb(var(--brass-rgb) / 0.3);
+  }
+
+  .process-thread-line {
+    stroke: var(--color-brass);
+  }
+
+  .process-steps {
+    position: relative;
+    display: grid;
+    gap: 3.5rem;
+    padding-left: 1.75rem;
+  }
+
+  .process-step {
+    display: grid;
+    grid-template-columns: 4.75rem minmax(0, 1fr);
+    column-gap: 1.25rem;
+    align-items: start;
+  }
+
+  .process-numeral {
+    position: relative;
+    display: inline-block;
+    justify-self: start;
+    font-family: var(--font-display);
+    font-size: 4rem;
+    font-weight: 300;
+    line-height: 0.9;
+    letter-spacing: -0.04em;
+    font-variant-numeric: lining-nums;
+  }
+
+  .process-numeral-outline {
+    color: transparent;
+    -webkit-text-stroke: 1px var(--color-ink);
+  }
+
+  .process-numeral-fill {
+    position: absolute;
+    inset: 0;
+    color: var(--color-ink);
+  }
+
+  .process-copy {
+    padding-top: 0.5rem;
+  }
+
+  .process-accent {
+    margin-top: 3.5rem;
+    margin-left: auto;
+    width: min(46%, 14rem);
+  }
+
+  @media (min-width: 1024px) {
+    .process-steps {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      column-gap: 1.5rem;
+      row-gap: 0;
+      padding-left: 0;
+    }
+
+    .process-step {
+      display: block;
+      margin-top: calc(var(--step) * 5rem);
+    }
+
+    .process-numeral {
+      font-size: clamp(5rem, 3rem + 6vw, 10rem);
+    }
+
+    .process-copy {
+      padding-top: 1.5rem;
+      padding-right: 1.5rem;
+    }
+
+    /* Sits in the empty corner the staircase leaves above step 04 (the fourth column). */
+    .process-accent {
+      position: absolute;
+      top: 0;
+      left: calc(75% + 1.125rem);
+      width: 12rem;
+      margin: 0;
+    }
+  }
+
+  /* Contact sheet rebate: a small edge-print arrow after the frame number. */
+  .rebate-arrow {
+    display: inline-block;
+    width: 0;
+    height: 0;
+    border-block: 3.5px solid transparent;
+    border-left: 5px solid currentColor;
+  }
+
+  /* Booking form fields: label above, 16px text (no iOS zoom), errors never colour alone. */
+  .field {
+    display: block;
+    width: 100%;
+    min-height: 3.25rem;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--color-line-strong);
+    border-radius: var(--radius-field);
+    background-color: var(--color-ivory);
+    color: var(--color-ink);
+    font: inherit;
+    font-size: 1rem;
+    line-height: 1.4;
+    transition:
+      border-color 200ms var(--ease-ui),
+      box-shadow 200ms var(--ease-ui);
+  }
+
+  .field::placeholder {
+    color: var(--color-ink-soft);
+    opacity: 1;
+  }
+
+  .field:hover {
+    border-color: var(--color-ink);
+  }
+
+  .field:focus-visible {
+    border-color: var(--color-ink);
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 2px;
+  }
+
+  .field[aria-invalid="true"] {
+    border-color: var(--color-sindoor-deep);
+    box-shadow: inset 0 0 0 1px var(--color-sindoor-deep);
+  }
+
+  .field::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    opacity: 0.65;
+  }
+
+  /* Function chips: real checkboxes; the plus turns into a check (transform and opacity only). */
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 2.75rem;
+    padding-inline: 0.875rem 1.125rem;
+    border: 1px solid var(--color-line-strong);
+    border-radius: var(--radius-pill);
+    color: var(--color-ink);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    cursor: pointer;
+    user-select: none;
+    transition:
+      background-color 200ms var(--ease-ui),
+      border-color 200ms var(--ease-ui),
+      color 200ms var(--ease-ui);
+  }
+
+  .chip:hover {
+    border-color: var(--color-ink);
+  }
+
+  .chip-icon {
+    display: grid;
+    width: 0.875rem;
+    height: 0.875rem;
+  }
+
+  .chip-icon > * {
+    grid-area: 1 / 1;
+    transition:
+      transform 300ms var(--ease-cinematic),
+      opacity 200ms var(--ease-ui);
+  }
+
+  .chip-check {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+
+  .chip-input:checked + .chip {
+    border-color: var(--color-sindoor);
+    background-color: rgb(var(--sindoor-rgb) / 0.08);
+    color: var(--color-sindoor-deep);
+  }
+
+  .chip-input:checked + .chip .chip-plus {
+    opacity: 0;
+    transform: rotate(90deg) scale(0.5);
+  }
+
+  .chip-input:checked + .chip .chip-check {
+    opacity: 1;
+    transform: none;
+  }
+
+  .chip-input:focus-visible + .chip {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 3px;
+  }
+
+  /* The message preview, shaped like a sent chat bubble. */
+  .preview-bubble {
+    padding: 1rem 1.125rem;
+    border-radius: 1.125rem 1.125rem 0.375rem 1.125rem;
+    background-color: var(--color-paper-deep);
+    color: var(--color-ink);
+    font-size: 0.9375rem;
+    line-height: 1.6;
+  }
+
+  .preview-token {
+    color: var(--color-ink-soft);
+    font-style: italic;
+    text-decoration: underline dotted rgb(var(--ink-rgb) / 0.45);
+    text-underline-offset: 3px;
+  }
+
+  /* The booking silk rises out of the paper instead of starting at a hard edge. */
+  .booking-backdrop {
+    -webkit-mask-image: linear-gradient(to bottom, transparent, #000 min(12rem, 35%));
+    mask-image: linear-gradient(to bottom, transparent, #000 min(12rem, 35%));
+  }
+
+  /* Footer wordmark, fitted to the container (JS sets --fit-size; CSS estimates first paint with
+     the measured width of "Ashugraphy": 5.47em). */
+  .footer-wordmark {
+    display: inline-block;
+    padding-block: 0.02em 0.16em;
+    font-family: var(--font-display);
+    font-size: var(--fit-size, calc((min(100vw, var(--container)) - 2 * var(--gutter)) / 5.47));
+    font-weight: 300;
+    line-height: 0.9;
+    letter-spacing: -0.045em;
+    white-space: nowrap;
+  }
+
   .sr-only-focusable:not(:focus):not(:focus-within) {
     position: absolute;
     width: 1px;
@@ -1009,7 +1273,8 @@
 
   .link-draw::after,
   .page-bg,
-  .glass__tint {
+  .glass__tint,
+  .chip-icon > * {
     transition-duration: 0.01ms;
   }
 }

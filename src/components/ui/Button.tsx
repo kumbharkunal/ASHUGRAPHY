@@ -11,6 +11,8 @@ interface CommonProps {
   /** Rendered inside a nested circle at the end of the pill (button-in-button). */
   icon?: ReactNode;
   fullWidth?: boolean;
+  /** Let a long label wrap onto a second line on narrow screens instead of overflowing. */
+  wrap?: boolean;
   className?: string;
 }
 
@@ -25,7 +27,7 @@ type ButtonDomProps = Omit<ComponentPropsWithoutRef<"button">, "className" | "ch
 export type ButtonProps = CommonProps & (AnchorDomProps | ButtonDomProps);
 
 const base =
-  "group relative inline-flex items-center gap-3 rounded-pill font-sans font-medium leading-none whitespace-nowrap " +
+  "group relative inline-flex items-center gap-3 rounded-pill font-sans font-medium leading-none " +
   "transition-[background-color,color,border-color,transform] duration-[250ms] ease-ui active:scale-[0.98] " +
   "focus-visible:outline-offset-4 disabled:pointer-events-none disabled:opacity-45 select-none";
 
@@ -57,12 +59,13 @@ function iconCircle(variant: Variant, size: Size): string {
  * sits in its own circle flush with the end of the pill. Works in server and client components.
  */
 export function Button(props: ButtonProps) {
-  const { label, variant = "primary", size = "md", icon, fullWidth, className, ...domProps } = props;
+  const { label, variant = "primary", size = "md", icon, fullWidth, wrap, className, ...domProps } = props;
   const classes = cx(
     base,
     variants[variant],
     sizing(size, Boolean(icon)),
     fullWidth ? "w-full justify-between" : "justify-center",
+    wrap ? "text-left whitespace-normal sm:whitespace-nowrap" : "whitespace-nowrap",
     className,
   );
 
