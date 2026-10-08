@@ -8,8 +8,8 @@ import { palette, withAlpha } from "@/lib/tokens";
 import { uiStore } from "@/lib/ui-store";
 
 const STORAGE_KEY = "ashu:intro";
-const READY_CAP_MS = 1200;
-const MIN_LETTERS_MS = 700;
+const READY_CAP_MS = 1000;
+const MIN_LETTERS_MS = 600;
 const FAILSAFE_MS = 6000;
 
 /** Fired when the iris is 40% open, so the hero load timeline can overlap it. */
@@ -23,7 +23,7 @@ interface Iris {
 
 /**
  * First-visit intro: the wordmark rises from a mask while a brass hairline fills with real progress
- * (fonts and the hero photo decoding, capped at 1.2s), then an aperture iris opens onto the hero,
+ * (fonts and the hero photo decoding, capped at 1s), then an aperture iris opens onto the hero,
  * which is server-rendered and already painted underneath. Click, wheel, touch or a key skips it.
  * Repeat visits in the same session never render it (the head script hides it before paint).
  */

@@ -1,5 +1,6 @@
 import { getImageProps } from "next/image";
 import type { CSSProperties } from "react";
+import { preload } from "react-dom";
 import { BrandIcon } from "@/components/ui/BrandIcon";
 import { Button } from "@/components/ui/Button";
 import { CircularBadge } from "@/components/ui/CircularBadge";
@@ -22,11 +23,17 @@ export function Hero() {
   const mobile = photos.heroMobile;
   const shared = { sizes: "100vw", quality: 70, loading: "eager", fetchPriority: "high" } as const;
   const {
-    props: { srcSet: desktopSrcSet },
+    props: { srcSet: desktopSrcSet, src: desktopSrc },
   } = getImageProps({ ...shared, alt: desktop.alt, src: desktop.src });
   const {
     props: { srcSet: mobileSrcSet, style: imageStyle, ...imageProps },
   } = getImageProps({ ...shared, alt: mobile.alt, src: mobile.src });
+
+  // The photo is the LCP element: request it from <head>, before the parser reaches the body and
+  // before the scripts. The media queries mirror the <source> elements, so only one downloads.
+  const preloadShared = { as: "image", imageSizes: "100vw", fetchPriority: "high" } as const;
+  preload(desktopSrc, { ...preloadShared, imageSrcSet: desktopSrcSet, media: "(orientation: landscape)" });
+  preload(imageProps.src, { ...preloadShared, imageSrcSet: mobileSrcSet, media: "(orientation: portrait)" });
 
   const frameStyle = {
     "--hero-pos-landscape": `${desktop.focal.x}% ${desktop.focal.y}%`,
