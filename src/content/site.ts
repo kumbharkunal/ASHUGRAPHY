@@ -380,6 +380,7 @@ export const booking = {
   },
   submit: "Check availability on WhatsApp",
   note: "Opens WhatsApp with this message. Nothing is sent until you press send.",
+  opened: "WhatsApp is open in a new tab with your message, ready to send.",
   popupBlocked: "WhatsApp did not open in a new tab. Use this link instead:",
   openLink: "Open WhatsApp",
   instagramCta: "Message on Instagram",

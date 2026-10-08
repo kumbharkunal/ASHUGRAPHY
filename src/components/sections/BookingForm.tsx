@@ -106,6 +106,7 @@ export function BookingForm({ submitIcon }: { submitIcon: ReactNode }) {
   const [live, setLive] = useState<Record<Field, boolean>>({ ...NO_FIELDS });
   const [errors, setErrors] = useState<Errors>({});
   const [fallbackUrl, setFallbackUrl] = useState<string | null>(null);
+  const [opened, setOpened] = useState(false);
   const { fields } = booking;
 
   // The page is static, so today's date is only known in the browser.
@@ -191,7 +192,9 @@ export function BookingForm({ submitIcon }: { submitIcon: ReactNode }) {
         // Already navigated cross-origin; nothing to cut.
       }
       setFallbackUrl(null);
+      setOpened(true);
     } else {
+      setOpened(false);
       setFallbackUrl(url);
     }
   };
@@ -325,6 +328,7 @@ export function BookingForm({ submitIcon }: { submitIcon: ReactNode }) {
             </Magnetic>
             <p className="text-sm text-ink-soft">{booking.note}</p>
             <div role="status" className="text-sm text-ink">
+              {opened ? <p>{booking.opened}</p> : null}
               {fallbackUrl ? (
                 <p>
                   {booking.popupBlocked}{" "}

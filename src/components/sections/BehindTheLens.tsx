@@ -28,12 +28,19 @@ function collectStats(): Stat[] {
 /** Behind the lens: the developing print beside an honest, short studio note. */
 export function BehindTheLens() {
   const stats = collectStats();
+  const { exif } = photos.behindTheLens;
 
   return (
     <section id="about" aria-labelledby="about-title" data-bg="deep" className="relative">
       <div className="container-page section-y grid grid-cols-4 gap-x-4 md:grid-cols-6 md:gap-x-5 lg:grid-cols-12 lg:items-center lg:gap-x-6">
         <div className="col-span-4 md:col-span-4 md:col-start-2 lg:col-span-5 lg:col-start-1 lg:mt-24">
           <DevelopingImage photo={photos.behindTheLens} sizes="(min-width: 1024px) 38vw, (min-width: 768px) 62vw, 92vw" />
+          <p aria-hidden="true" className="mt-6 flex gap-3 font-mono text-caption text-ink-soft">
+            <span>{exif.lens}</span>
+            <span>{exif.aperture}</span>
+            <span>{exif.shutter}</span>
+            <span>ISO {exif.iso}</span>
+          </p>
         </div>
 
         <div className="col-span-4 mt-16 md:col-span-6 lg:col-span-6 lg:col-start-7 lg:mt-0">

@@ -47,6 +47,11 @@ export function scrollToTop() {
 let lockCount = 0;
 let lockedY = 0;
 
+/** True while an overlay holds the page still (the window then reports a scroll position of 0). */
+export function isScrollLocked(): boolean {
+  return lockCount > 0;
+}
+
 /** iOS-safe scroll lock, reference counted so overlapping overlays never unlock early. */
 export function lockScroll() {
   lockCount += 1;

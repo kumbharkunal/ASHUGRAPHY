@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/Button";
 import { nav, socials, studio } from "@/content/site";
 import { lockScroll, scrollToSection, unlockScroll } from "@/lib/scroll";
 import { uiStore, useUI } from "@/lib/ui-store";
-import { pad2 } from "@/lib/utils";
+import { cx, pad2 } from "@/lib/utils";
 import { waLink, waMessages } from "@/lib/whatsapp";
 
 export interface SocialIcons {
@@ -22,6 +22,8 @@ interface MobileMenuProps {
   toggleRef: RefObject<HTMLButtonElement | null>;
   socialIcons: SocialIcons;
   ctaIcon: ReactNode;
+  /** The section currently in view, marked in the list. */
+  active: string | null;
 }
 
 const OPEN_CLIP = "inset(0px 0px 0px 0px round 28px)";
@@ -66,7 +68,7 @@ const footerVariants = {
  * taps simply retarget the spring. Locks scroll (iOS-safe), makes the page inert, traps focus,
  * closes on Escape, backdrop tap, link tap and resize to desktop, and restores focus.
  */
-export function MobileMenu({ toggleRef, socialIcons, ctaIcon }: MobileMenuProps) {
+export function MobileMenu({ toggleRef, socialIcons, ctaIcon, active }: MobileMenuProps) {
   const open = useUI((state) => state.menuOpen);
   const pathname = usePathname();
   const isHome = pathname === "/";
@@ -237,9 +239,15 @@ export function MobileMenu({ toggleRef, socialIcons, ctaIcon }: MobileMenuProps)
                   href={`/#${link.id}`}
                   prefetch={false}
                   onClick={(event) => onLink(event, link.id)}
+                  aria-current={active === link.id ? "location" : undefined}
                   className="group flex items-baseline gap-4 py-3"
                 >
-                  <m.span variants={indexVariants} className="w-6 font-mono text-caption text-ink-soft">{pad2(index + 1)}</m.span>
+                  <m.span
+                    variants={indexVariants}
+                    className={cx("w-6 font-mono text-caption", active === link.id ? "text-sindoor" : "text-ink-soft")}
+                  >
+                    {pad2(index + 1)}
+                  </m.span>
                   <span className="block overflow-hidden pb-[0.12em]">
                     <m.span
                       variants={linkVariants}

@@ -90,9 +90,7 @@ export function Hero() {
                   <span key={lineIndex} className="block">
                     {line.map((run, runIndex) =>
                       run.italic ? (
-                        <em key={runIndex} className="pr-[0.04em]">
-                          {run.text}
-                        </em>
+                        <em key={runIndex}>{run.text}</em>
                       ) : (
                         <span key={runIndex}>{run.text}</span>
                       ),

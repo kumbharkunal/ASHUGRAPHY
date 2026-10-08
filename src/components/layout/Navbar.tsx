@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/Button";
 import { Magnetic } from "@/components/ui/Magnetic";
 import { nav } from "@/content/site";
 import { ScrollTrigger, useGSAP } from "@/lib/gsap";
-import { scrollToSection, scrollToTop } from "@/lib/scroll";
+import { isScrollLocked, scrollToSection, scrollToTop } from "@/lib/scroll";
 import { uiStore, useUI } from "@/lib/ui-store";
 import { cx } from "@/lib/utils";
 import { waLink, waMessages } from "@/lib/whatsapp";
@@ -92,7 +92,11 @@ export function Navbar({ ctaIcon, socialIcons }: NavbarProps) {
           start: "top 45%",
           end: "bottom 45%",
           refreshPriority: -1,
-          onToggle: (self) => setActive((current) => (self.isActive ? id : current === id ? null : current)),
+          onToggle: (self) => {
+            // The menu's scroll lock makes the page read as scrolled to the top; keep the real section.
+            if (isScrollLocked()) return;
+            setActive((current) => (self.isActive ? id : current === id ? null : current));
+          },
         });
       });
     },
@@ -207,7 +211,7 @@ export function Navbar({ ctaIcon, socialIcons }: NavbarProps) {
         </m.nav>
       </header>
 
-      <MobileMenu toggleRef={toggleRef} socialIcons={socialIcons} ctaIcon={ctaIcon} />
+      <MobileMenu toggleRef={toggleRef} socialIcons={socialIcons} ctaIcon={ctaIcon} active={active} />
     </>
   );
 }

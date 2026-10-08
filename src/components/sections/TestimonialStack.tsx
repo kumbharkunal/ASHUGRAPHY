@@ -102,11 +102,11 @@ function StackCard({ item, index, depth, total, flight, label, onSwipe, onLanded
       inert={!isTop}
     >
       <m.div style={{ rotate: tilt }} className="h-full rounded-card bg-paper p-1.5 shadow-card ring-1 ring-line">
-        <figure className="flex h-full flex-col rounded-card-inner bg-ivory px-6 pt-8 pb-7 shadow-[inset_0_1px_0_rgb(255_255_255/0.6)] sm:px-10 sm:pt-11 sm:pb-9">
+        <figure className="flex h-full flex-col rounded-card-inner bg-ivory px-6 pt-8 pb-7 shadow-[inset_0_1px_0_rgb(255_255_255/0.6)] sm:px-10 sm:pt-11 sm:pb-9 lg:px-14 lg:pt-14 lg:pb-12">
           <span aria-hidden="true" className="h-8 font-display text-[6rem] leading-[0.8] font-light text-sindoor sm:h-10 sm:text-[7rem]">
             “
           </span>
-          <blockquote className="mt-5 font-display text-[clamp(1.4rem,1rem+1.2vw,2rem)] leading-tight font-light tracking-[-0.01em] text-ink">
+          <blockquote className="mt-5 max-w-[24ch] font-display text-[clamp(1.4rem,0.95rem+1.7vw,2.6rem)] leading-tight font-light tracking-[-0.015em] text-ink">
             <p>{item.quote}</p>
           </blockquote>
           <figcaption className="mt-auto flex flex-wrap items-center gap-3 pt-10 text-sm text-ink-soft">
@@ -169,8 +169,8 @@ export function TestimonialStack({ heading, after }: { heading: ReactNode; after
     "duration-200 ease-ui hover:border-ink hover:bg-ink/5 active:scale-95";
 
   return (
-    <div className="grid gap-y-12 lg:grid-cols-12 lg:gap-x-6 lg:gap-y-10">
-      <div className="lg:col-span-5 lg:row-start-1">{heading}</div>
+    <div className="grid gap-y-12 lg:grid-cols-12 lg:grid-rows-[1fr_1fr] lg:gap-x-6 lg:gap-y-10">
+      <div className="lg:col-span-5 lg:row-start-1 lg:self-end">{heading}</div>
 
       <div
         ref={stackRef}
@@ -180,7 +180,7 @@ export function TestimonialStack({ heading, after }: { heading: ReactNode; after
         aria-roledescription="carousel"
         aria-label={testimonials.title}
         onKeyDown={onKeyDown}
-        className="grid rounded-card pb-9 outline-offset-8 lg:col-span-6 lg:col-start-7 lg:row-span-2 lg:row-start-1"
+        className="grid rounded-card pb-9 outline-offset-8 lg:col-span-7 lg:col-start-6 lg:row-span-2 lg:row-start-1"
       >
         {items.map((item, index) => (
           <StackCard
@@ -197,7 +197,7 @@ export function TestimonialStack({ heading, after }: { heading: ReactNode; after
         ))}
       </div>
 
-      <div className="flex flex-col items-start gap-8 lg:col-span-5 lg:row-start-2 lg:self-start">
+      <div className="flex flex-col items-start gap-8 lg:col-span-5 lg:row-start-2 lg:self-start lg:pt-2">
         <div className="flex items-center gap-4">
           <button
             type="button"
