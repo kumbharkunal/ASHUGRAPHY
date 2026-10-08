@@ -61,13 +61,18 @@ test.describe("booking form", () => {
       "Functions: Mehendi, Reception. Could you share your availability?";
     await expect(page.locator("#book output")).toHaveText(expected);
 
+    // WhatsApp itself is stubbed, so the test needs no network and checks only what the site sends.
+    await context.route(/^https:\/\/(wa\.me|api\.whatsapp\.com)\//, (route) =>
+      route.fulfill({ status: 200, contentType: "text/html", body: "<title>WhatsApp</title>" }),
+    );
     const popupPromise = page.waitForEvent("popup");
     await page.getByRole("button", { name: /Check availability on WhatsApp/ }).click();
     const popup = await popupPromise;
-    await popup.waitForURL(/(wa\.me|whatsapp\.com)/, { waitUntil: "commit" });
+    await popup.waitForURL(/wa\.me/, { waitUntil: "commit" });
     const url = new URL(popup.url());
     const text = url.searchParams.get("text");
     expect(text).toBe(expected);
+    await expect(page.locator("#book [role='status']")).toHaveText(/WhatsApp is open in a new tab/);
     await context.close();
   });
 });
