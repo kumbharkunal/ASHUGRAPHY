@@ -690,6 +690,281 @@
     }
   }
 
+  /* Stories: a snap carousel by default; a pinned horizontal roll on large fine-pointer screens
+     with motion and JS (the same condition as QUERIES.desktopMotion). */
+  .stories-stage {
+    padding-block: var(--section-y);
+  }
+
+  .stories-intro {
+    width: 100%;
+    max-width: var(--container);
+    margin-inline: auto;
+    margin-bottom: clamp(2rem, 1rem + 3vw, 3.5rem);
+    padding-inline: var(--gutter);
+  }
+
+  .stories-track {
+    display: flex;
+    gap: 0.75rem;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--gutter);
+    padding-inline: var(--gutter);
+    scrollbar-width: none;
+  }
+
+  .stories-track::-webkit-scrollbar {
+    display: none;
+  }
+
+  .story-card {
+    position: relative;
+    flex: 0 0 min(84vw, 26.25rem);
+    scroll-snap-align: start;
+  }
+
+  .story-frame {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    aspect-ratio: 4 / 5;
+    background-color: var(--color-paper-deep);
+  }
+
+  .story-caption {
+    padding-top: 1rem;
+  }
+
+  .story-satellite {
+    position: absolute;
+    right: 0.75rem;
+    bottom: 0.75rem;
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 9999px;
+    background-color: var(--color-ivory);
+    color: var(--color-ink);
+  }
+
+  .stories-progress {
+    display: none;
+  }
+
+  .stories-dots {
+    display: flex;
+    justify-content: center;
+    margin-top: 1.25rem;
+  }
+
+  .stories-progress-track {
+    position: relative;
+    flex: 1;
+    height: 1px;
+    background-color: rgb(var(--brass-rgb) / 0.3);
+  }
+
+  .stories-progress-line {
+    position: absolute;
+    inset: 0;
+    background-color: var(--color-brass);
+    transform: scaleX(0);
+    transform-origin: left center;
+  }
+
+  @media (min-width: 1024px) and (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+    .js .stories-stage {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      height: 100svh;
+      min-height: 40rem;
+      padding-block: 0;
+      overflow: hidden;
+    }
+
+    /* The bottom band holds the captions (up to ~10rem) above the progress readout. Frame sizes
+       are capped so the tallest frame always clears the nav: 13.75rem band + 6rem headroom. */
+    .js .stories-mover {
+      --stories-room: calc(100svh - 19.75rem);
+      position: relative;
+      display: flex;
+      flex: 1;
+      align-items: flex-end;
+      width: max-content;
+      padding-bottom: 13.75rem;
+    }
+
+    .js .stories-intro {
+      flex: 0 0 auto;
+      align-self: center;
+      width: clamp(18rem, 30vw, 30rem);
+      max-width: none;
+      margin: 0;
+      padding-inline: var(--gutter) 3vw;
+    }
+
+    .js .stories-track {
+      align-items: flex-end;
+      gap: 6vw;
+      overflow: visible;
+      scroll-snap-type: none;
+      padding-inline: 0 14vw;
+    }
+
+    .js .story-card {
+      flex: 0 0 auto;
+    }
+
+    .js .story-card--portrait .story-frame {
+      width: auto;
+      height: min(58svh, var(--stories-room));
+      aspect-ratio: 2 / 3;
+    }
+
+    .js .story-card--landscape .story-frame {
+      width: min(46vw, var(--stories-room) * 1.5);
+      aspect-ratio: 3 / 2;
+    }
+
+    .js .story-caption {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      width: max(100%, 22rem);
+    }
+
+    .js .story-satellite,
+    .js .stories-dots {
+      display: none;
+    }
+
+    .js .stories-progress {
+      position: absolute;
+      right: var(--gutter);
+      bottom: 1.75rem;
+      left: var(--gutter);
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+  }
+
+  /* Full-screen story viewer (native dialog). */
+  .story-viewer {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100dvh;
+    max-width: none;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    overflow: hidden;
+    background-color: var(--color-paper-deep);
+    color: var(--color-ink);
+  }
+
+  .story-viewer::backdrop {
+    background-color: rgb(var(--ink-rgb) / 0.55);
+  }
+
+  /* Services index rows. Hover and keyboard focus share one designed state. */
+  .service-row {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    align-items: center;
+    gap: 1.5rem;
+    padding-block: 1.75rem;
+    border-top: 1px solid var(--color-line);
+    outline-offset: 4px;
+  }
+
+  .service-title {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 1rem + 3.4vw, 4.5rem);
+    font-weight: 300;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    transition:
+      transform 500ms var(--ease-cinematic),
+      color 250ms var(--ease-ui);
+  }
+
+  .service-row:hover .service-title,
+  .service-row:focus-visible .service-title {
+    color: var(--color-sindoor);
+    transform: translateX(1.5rem);
+  }
+
+  .service-arrow {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 3.25rem;
+    height: 3.25rem;
+    border-radius: 9999px;
+    border: 1px solid var(--color-line-strong);
+    overflow: hidden;
+  }
+
+  .service-arrow-fill {
+    position: absolute;
+    inset: 0;
+    background-color: var(--color-sindoor);
+    clip-path: circle(0% at 50% 50%);
+    transition: clip-path 500ms var(--ease-cinematic);
+  }
+
+  .service-arrow-icon {
+    position: relative;
+    color: var(--color-ink);
+    transform: translate(-0.35rem, 0.35rem);
+    opacity: 0.6;
+    transition:
+      transform 450ms var(--ease-cinematic),
+      opacity 250ms var(--ease-ui),
+      color 250ms var(--ease-ui);
+  }
+
+  .service-row:hover .service-arrow-fill,
+  .service-row:focus-visible .service-arrow-fill {
+    clip-path: circle(75% at 50% 50%);
+  }
+
+  .service-row:hover .service-arrow-icon,
+  .service-row:focus-visible .service-arrow-icon {
+    color: var(--color-ivory);
+    opacity: 1;
+    transform: translate(0, 0);
+  }
+
+  /* Developing print: the grey, grainy copy only exists with JS and motion. */
+  .develop-layer {
+    display: none;
+  }
+
+  .develop-tone {
+    filter: grayscale(1) contrast(0.72) brightness(1.1);
+  }
+
+  .develop-grain {
+    background-image: url("/grain.png");
+    background-size: 128px 128px;
+    opacity: 0.4;
+    mix-blend-mode: multiply;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .js .develop-layer {
+      display: block;
+    }
+  }
+
   .sr-only-focusable:not(:focus):not(:focus-within) {
     position: absolute;
     width: 1px;

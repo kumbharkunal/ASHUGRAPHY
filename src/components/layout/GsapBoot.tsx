@@ -1,15 +1,19 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import { useEffect } from "react";
 import { gsap, ScrollTrigger } from "@/lib/gsap";
 import { QUERIES } from "@/lib/media";
 
 /**
  * Marks GSAP as ready (which switches off the CSS reveal failsafe), keeps ScrollTrigger measured
- * after fonts and images settle, and gives every [data-reveal] element a simple 200ms fade when the
- * visitor prefers reduced motion. With motion allowed, each section owns its own reveals.
+ * after fonts and images settle, and runs the generic reveals:
+ * - motion allowed: [data-reveal="up"] text blocks rise gently into place (sections own the rest);
+ * - reduced motion: every [data-reveal] element gets a single 200ms fade.
  */
 export function GsapBoot() {
+  const pathname = usePathname();
+
   useEffect(() => {
     const root = document.documentElement;
     root.classList.add("gsap-ready");
@@ -19,6 +23,21 @@ export function GsapBoot() {
     window.addEventListener("load", refresh, { once: true });
 
     const mm = gsap.matchMedia();
+
+    mm.add(QUERIES.motion, () => {
+      ScrollTrigger.batch("[data-reveal='up']", {
+        start: "top 88%",
+        once: true,
+        onEnter: (elements) => {
+          gsap.fromTo(
+            elements,
+            { autoAlpha: 0, y: 24 },
+            { autoAlpha: 1, y: 0, duration: 0.9, ease: "power4.out", stagger: 0.08, overwrite: true },
+          );
+        },
+      });
+    });
+
     mm.add(QUERIES.reduce, () => {
       ScrollTrigger.batch("[data-reveal]", {
         start: "top 95%",
@@ -32,7 +51,7 @@ export function GsapBoot() {
       window.removeEventListener("load", refresh);
       mm.revert();
     };
-  }, []);
+  }, [pathname]);
 
   return null;
 }
