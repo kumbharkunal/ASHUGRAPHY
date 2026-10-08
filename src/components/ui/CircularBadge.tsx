@@ -14,7 +14,8 @@ const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
 
 /**
  * Rotating circular text around an official WhatsApp mark. Only the text ring rotates (driven by
- * the hero motion code); the brand mark stays upright and still.
+ * the hero motion code); the brand mark stays upright and still. The ring is decorative, so the
+ * link is named by visually hidden text that starts with the ring's own words.
  */
 export function CircularBadge({ href, text, label, icon, className }: CircularBadgeProps) {
   return (
@@ -22,7 +23,6 @@ export function CircularBadge({ href, text, label, icon, className }: CircularBa
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      aria-label={`${label} (opens in a new tab)`}
       data-hero-badge
       data-reveal
       className={cx(
@@ -45,6 +45,7 @@ export function CircularBadge({ href, text, label, icon, className }: CircularBa
       <span className="relative grid size-11 place-items-center rounded-full bg-ivory transition-transform duration-500 ease-cinematic group-hover:scale-110">
         {icon}
       </span>
+      <span className="sr-only">{label} (opens in a new tab)</span>
     </a>
   );
 }

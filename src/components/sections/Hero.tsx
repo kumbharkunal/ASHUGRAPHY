@@ -9,6 +9,7 @@ import { ScrollButton, ScrollTextLink } from "@/components/ui/ScrollButton";
 import { photos } from "@/content/images";
 import { hero, studio, trust } from "@/content/site";
 import { waLink, waMessages } from "@/lib/whatsapp";
+import { HeroShaderLoader } from "@/components/webgl/HeroShaderLoader";
 import { HeroMotion } from "./HeroMotion";
 
 /**
@@ -53,6 +54,7 @@ export function Hero() {
                   <source media="(orientation: landscape)" srcSet={desktopSrcSet} sizes="100vw" />
                   <img {...imageProps} style={imageStyle} alt={desktop.alt} className="hero-img absolute inset-0 size-full object-cover" />
                 </picture>
+                <HeroShaderLoader focal={{ landscape: desktop.focal, portrait: mobile.focal }} />
               </div>
             </div>
             <div data-hero-scrim aria-hidden="true" className="hero-scrim hero-scrim--top" />

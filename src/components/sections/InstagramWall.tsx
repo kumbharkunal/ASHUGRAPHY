@@ -13,7 +13,7 @@ import { InstagramMotion } from "./InstagramMotion";
  */
 export function InstagramWall() {
   return (
-    <section id="instagram" aria-labelledby="instagram-title" className="relative">
+    <section id="instagram" aria-labelledby="instagram-title" className="relative overflow-x-clip">
       <div className="container-page section-y">
         <div className="flex flex-col items-start gap-8 md:flex-row md:items-end md:justify-between">
           <SplitHeading id="instagram-title" className="font-display text-display font-light">

@@ -23,7 +23,7 @@ export function Testimonials() {
     ) : null;
 
   return (
-    <section id="reviews" aria-labelledby="reviews-title" data-bg="deep" className="relative">
+    <section id="reviews" aria-labelledby="reviews-title" data-bg="deep" className="relative overflow-x-clip">
       <div className="container-page section-y">
         <TestimonialStack
           heading={

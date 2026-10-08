@@ -24,8 +24,15 @@ const [zodiakLight, zodiakLightItalic, zodiakRegular, dmMono] = await Promise.al
   readFile(join(root, "scripts/assets/DMMono-Regular.ttf")),
 ]);
 
-/** OG_IMAGE_SOURCE (optional, relative to the project) previews the card with another photograph. */
-const source = resolve(root, process.env.OG_IMAGE_SOURCE || "images/hero-desktop.webp");
+/**
+ * The hero photograph (a static path, so only this file is traced into the server bundle).
+ * OG_IMAGE_SOURCE, optional and relative to the project, previews the card with another photo at
+ * build time; it is excluded from tracing on purpose.
+ */
+const override = process.env.OG_IMAGE_SOURCE;
+const source = override
+  ? resolve(/*turbopackIgnore: true*/ root, override)
+  : join(process.cwd(), "images", "hero-desktop.webp");
 
 async function heroPhoto(): Promise<string | null> {
   const file = source;

@@ -7,7 +7,8 @@ import { QUERIES } from "@/lib/media";
 /**
  * - Ornament: a left-to-right clip-path wipe like ink spreading (1.4s cinematic), with vertical
  *   overflow allowed so Devanagari marks above and below are never clipped.
- * - Paragraph: words develop from 0.15 to full opacity, scrubbed by scroll. While split, the visual
+ * - Paragraph: words develop from half to full opacity, scrubbed by scroll (half keeps even the
+ *   undeveloped words at 3.2:1 on paper, above the 3:1 large-text minimum). While split, the visual
  *   copy is hidden from assistive tech and an sr-only twin reads as one sentence.
  */
 export function ManifestoMotion({ children }: { children: ReactNode }) {
@@ -54,7 +55,7 @@ export function ManifestoMotion({ children }: { children: ReactNode }) {
         const split = SplitText.create(visual, { type: "words", aria: "none" });
         gsap.fromTo(
           split.words,
-          { opacity: 0.15 },
+          { opacity: 0.5 },
           {
             opacity: 1,
             ease: "none",

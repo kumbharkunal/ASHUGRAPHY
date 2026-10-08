@@ -1210,6 +1210,17 @@
     text-underline-offset: 3px;
   }
 
+  /* Hero WebGL layer: hidden at rest (the crisp <img> shows), faded in while the cursor moves. */
+  .hero-gl {
+    opacity: 0;
+    transition: opacity 700ms var(--ease-ui);
+  }
+
+  .hero-gl[data-active="true"] {
+    opacity: 1;
+    transition-duration: 350ms;
+  }
+
   /* Client-side navigation curtain (template.tsx). Never drawn on the first load. */
   .route-curtain {
     position: fixed;
