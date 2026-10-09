@@ -27,8 +27,8 @@ This is the design specification for the Ashugraphy homepage. Code follows it; w
 
 Captions always sit outside photographs, never as pills over them.
 
-**Interaction tier:** L3 (immersive): GSAP + ScrollTrigger + SplitText + ScrambleText + DrawSVG, Lenis smoothing, Motion for UI state, one optional OGL WebGL moment.
-**Dials (taste-skill):** DESIGN_VARIANCE 7 · MOTION_INTENSITY 8 · VISUAL_DENSITY 3.
+**Interaction tier:** L3 (immersive): GSAP + ScrollTrigger + SplitText + ScrambleText, Lenis smoothing, Motion for UI state, one OGL WebGL moment (lazy, desktop only).
+**Dials (taste-skill):** DESIGN_VARIANCE 7, MOTION_INTENSITY 8, VISUAL_DENSITY 3.
 
 ## 2. Color Palette & Roles
 
@@ -85,6 +85,7 @@ Captions always sit outside photographs, never as pills over them.
 | ink on light nav glass (ivory 60%), worst case over a dark photo | ≥ 6.90 | nav, light tone |
 | ivory on dark nav glass (ink 66%), worst case over a near-white photo | ≥ 5.61 | nav, dark tone over the hero |
 | ink / ink-soft on booking scrim (paper 86%) over silk | ≥ 11.54 / ≥ 4.87 | booking section |
+| ivory hero copy over the photo and its scrims, measured on pixels (95th percentile) | ≥ 4.62 small text, ≥ 3.64 title | hero at 320 to 1920px, current photos |
 | line-strong on ivory | 3.81 | input borders (non-text 3:1) |
 | WhatsApp green on paper | 1.70 | FAB gets a 1px line-strong ring |
 
@@ -92,7 +93,7 @@ Captions always sit outside photographs, never as pills over them.
 - Components reference tokens only. Tailwind's default palette is cleared (`--color-*: initial`), so a stray `bg-blue-500` cannot compile into anything.
 - One accent. Sindoor is never used for large fills beyond buttons and never for body text.
 - No pure white or black surfaces. The exceptions are the glass highlight (`rgb(255 255 255 / .5)`) and the white "f" inside the Facebook mark.
-- No decorative gradients. Ink scrims over photographs exist only for legibility, and their strength is set per photo in `src/content/images.ts`.
+- No decorative gradients. Ink scrims over photographs exist only for legibility. They are flat at full strength under the copy and fade only where no text sits: on portrait screens a top band (eyebrow and title) and a bottom band (sub and buttons), leaving the middle clear for the couple; on landscape screens a light band for the nav, one deep band under the copy block and a side band behind the left-aligned lines. Their strengths are set per photo in `src/content/images.ts` and proven by `tests/contrast-over-image.spec.ts`, which samples the real pixels under every line of hero text.
 
 ## 3. Typography Rules
 
@@ -100,14 +101,17 @@ All fonts are self-hosted through `next/font` (no third-party requests, no layou
 
 | Role | Font | Loading | Fallback stack |
 |---|---|---|---|
-| Display + italics | Zodiak (variable roman 100 to 900, Light Italic 300) | roman preloaded, italic on demand | "Times New Roman", serif (metric-adjusted) |
+| Display | Zodiak, official static faces: Light 300 and Regular 400 | Light preloaded; Regular on demand | "Times New Roman", serif (metric-adjusted) |
+| Emotional italics | Zodiak Light Italic 300 | on demand | as above |
 | UI and body | Hanken Grotesk (variable) | preloaded, latin | Arial, sans-serif (metric-adjusted) |
 | Captions, EXIF, counters | DM Mono 400 | on demand, latin + latin-ext | ui-monospace, monospace |
-| Devanagari | Tiro Devanagari Marathi 400 | on demand, devanagari | "Noto Serif Devanagari", serif |
+| Devanagari | Tiro Devanagari Marathi 400 | after the page has loaded (or when its text nears the viewport) | Nirmala UI, Kohinoor Devanagari, Noto Sans Devanagari |
+
+Zodiak uses static faces rather than the variable font: an engine that ignores the weight axis renders the variable font's heaviest master, while a static face always renders as drawn. All three Zodiak files share the family name `zodiak`, so weight and style select the face. The Devanagari words sit far below the fold, so their font never competes with the hero; the system faces are named in the meantime to spare the browser a slow fallback search.
 
 | Token | Size | Weight | Line height | Tracking | Use |
 |---|---|---|---|---|---|
-| `text-hero` | clamp(3rem, 0.9rem + 8.6vw, 10.5rem) | 300 | 0.92 | -0.035em | hero h1 |
+| `text-hero` | clamp(3rem, 0.9rem + 8.6vw, 9rem) | 300 | 0.92 | -0.035em | hero h1 (capped so it stays on two lines in the container) |
 | `text-display` | clamp(2.5rem, 1.2rem + 4.6vw, 6.5rem) | 300 | 0.98 | -0.025em | section h2 |
 | `text-lead` | clamp(1.625rem, 0.9rem + 2.9vw, 4rem) | 300 | 1.12 | -0.015em | manifesto |
 | `text-h3` | clamp(1.5rem, 1.1rem + 1.4vw, 2.5rem) | 400 | 1.15 | -0.01em | story, step, card titles |
@@ -167,7 +171,7 @@ Labels roll on hover. The label is two stacked spans (`.label-roll`); the first 
 
 ### Cards (double bezel, used only for testimonial cards and the booking form)
 ```css
-.card-shell { padding: 6px; border-radius: var(--radius-card); background: rgb(var(--paper-deep-rgb) / 0.5); box-shadow: 0 0 0 1px var(--color-line); }
+.card-shell { padding: 6px; border-radius: var(--radius-card); background: var(--color-paper); box-shadow: 0 0 0 1px var(--color-line), var(--shadow-card); }
 .card-core { border-radius: var(--radius-card-inner); background: var(--color-ivory); box-shadow: var(--shadow-card); padding: 2rem; }
 .card-shell:focus-within { box-shadow: 0 0 0 1px var(--color-line-strong); }
 ```
@@ -177,38 +181,39 @@ Labels roll on hover. The label is two stacked spans (`.label-roll`); the first 
 .nav { position: fixed; top: var(--nav-top); left: 50%; translate: -50% 0; height: var(--nav-h); z-index: var(--z-nav); }
 /* Glass: constant blur layer + two tint layers cross-faded by opacity (see .glass in globals.css). */
 .nav-link { padding: 0.5rem 0.875rem; border-radius: var(--radius-pill); font: 500 0.9375rem/1 var(--font-sans); }
-.nav-link[aria-current="true"] { /* the active pill slides between links (Motion layoutId) */ }
+.nav-link[aria-current="location"] { /* the active pill slides between links (Motion layoutId) */ }
 .nav-link:hover::after { transform: scaleX(1); }   /* underline draws from the left */
 .nav-link:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
 ```
 States:
 - **Tone:** `[data-tone="dark"]` over photographs (ivory text, ink 66% tint); light elsewhere.
 - **Scrolling:** hidden while scrolling down past 120px, shown on scroll up, compact (scale 0.96) once scrolled.
+- **Mobile menu:** the pill morphs into a sheet; the section you are in carries `aria-current="location"` and a sindoor index number. While an overlay locks the page, section tracking pauses so the real section is kept.
 
 ### Links
 `.link-draw` draws a 1px underline from the left on hover or focus and retracts to the right (420ms cinematic). `aria-current` keeps it drawn.
 
 ### Inputs
 ```css
-.field { min-height: 3rem; padding: 0.75rem 1rem; border-radius: var(--radius-field);
+.field { min-height: 3.25rem; padding: 0.75rem 1rem; border-radius: var(--radius-field);
   border: 1px solid var(--color-line-strong); background: var(--color-ivory); color: var(--color-ink); }
 .field::placeholder { color: var(--color-ink-soft); }
 .field:hover { border-color: var(--color-ink); }
 .field:focus-visible { outline: 2px solid var(--color-ink); outline-offset: 2px; border-color: var(--color-ink); }
-.field[aria-invalid="true"] { border-color: var(--color-sindoor-deep); }
+.field[aria-invalid="true"] { border-color: var(--color-sindoor-deep); box-shadow: inset 0 0 0 1px var(--color-sindoor-deep); }
 .field:disabled { opacity: 0.45; }
 ```
-- Labels sit above the field.
-- Helper text sits below.
-- Errors sit below the helper text in sindoor-deep, with a WarningCircle icon, and are wired with `aria-describedby`.
+- Labels sit above the field; input text is 16px, so iOS never zooms.
+- Helper text sits below. While an error shows, it replaces the helper (the error copy carries the hint).
+- Errors appear when you leave a field you typed in, or on submit (which focuses the first field that needs attention). A picked date is checked straight away. Errors are sindoor-deep with a WarningCircle icon and are wired with `aria-describedby`.
+- The message preview is built from the same template as the sent text, so the two cannot drift apart. After WhatsApp opens, a polite status confirms it; if the browser blocks the new tab, the status offers a link instead.
 
 ### Chips (functions in the booking form)
-Real checkboxes styled as pills:
-- **Default:** a 1px line-strong ring.
+Real checkboxes styled as pills, at least 44px tall:
+- **Default:** a 1px line-strong ring and a plus.
 - **Hover:** ink ring.
-- **Checked:** ink fill, ivory text, a check icon.
-- **Focus:** the 2px ring.
-- **Disabled:** 0.45 opacity.
+- **Checked:** sindoor ring, a sindoor 8% tint, sindoor-deep text, and the plus turns into a check (transform and opacity only), so the state never relies on colour alone.
+- **Focus:** the 2px ring around the pill.
 
 ### Brand marks
 - Original paths come from simple-icons, rendered server-side.
@@ -298,19 +303,19 @@ Dialogs use the native top layer.
 
 **Philosophy:** motion only tells the story (screen to print, develop, roll, contact sheet) or confirms an action. One orchestrated moment per viewport. Only transform, opacity and clip-path animate.
 
-**Dependencies:** `gsap` 3.15 (ScrollTrigger, SplitText, ScrambleText, DrawSVG, CustomEase), `@gsap/react` (useGSAP), `motion` 14 (LazyMotion + `m`, async domMax), `lenis` 1.3 (ReactLenis root), `ogl` (optional hero shader, lazy).
+**Dependencies:** `gsap` 3.15 (ScrollTrigger, SplitText, ScrambleText, CustomEase), `@gsap/react` (useGSAP), `motion` 14 (LazyMotion + `m`, async domMax), `lenis` 1.3 (ReactLenis root), `ogl` (hero shader, lazy).
 
 **Engine ownership:** GSAP owns scroll, text and image choreography; Motion owns UI state (nav, menu, presence, drag, magnetic). Every element is owned by exactly one engine.
 
 ### Base setup
 ```ts
 // src/lib/gsap.ts (client): registered once
-gsap.registerPlugin(useGSAP, ScrollTrigger, SplitText, ScrambleTextPlugin, DrawSVGPlugin, CustomEase);
+gsap.registerPlugin(useGSAP, ScrollTrigger, SplitText, ScrambleTextPlugin, CustomEase);
 CustomEase.create("cinematic", "0.16,1,0.3,1");
 ScrollTrigger.config({ ignoreMobileResize: true });
 
 // src/components/layout/SmoothScroll.tsx
-<ReactLenis root options={{ autoRaf: false, lerp: 0.1, syncTouch: false }} ref={lenisRef} />
+<ReactLenis root options={{ autoRaf: false, lerp: 0.1, syncTouch: false, virtualScroll: smoothUnlessReduced }} ref={lenisRef} />
 gsap.ticker.add((time) => lenisRef.current?.lenis?.raf(time * 1000));
 gsap.ticker.lagSmoothing(0);
 useLenis(() => ScrollTrigger.update());
@@ -332,7 +337,7 @@ Text rises from SplitText line masks (`yPercent 110 → 0`, 1.1s expo.out, stagg
 - **Desktop only (≤2 pins):**
   - Hero pin "screen to print": scale 1 → 0.62, radius 0 → 18px visible.
   - Stories horizontal roll: `ease: "none"` + `containerAnimation` for inner parallax.
-- **Scrubs:** the manifesto word reveal, the process thread (DrawSVG), the developing print, and parallax on the manifesto prints.
+- **Scrubs:** the manifesto word reveal (from half to full opacity, so even undeveloped words keep 3.2:1), the process thread (a `pathLength="1"` path whose dash offset is scrubbed, re-measured on resize), the developing print, and parallax on the manifesto prints.
 - **Touch devices:** light parallax and fades only, no pins.
 
 ### Hover and focus
@@ -347,15 +352,16 @@ Text rises from SplitText line masks (`yPercent 110 → 0`, 1.1s expo.out, stagg
 - Velocity-driven marquee.
 - Cursor follower with View/Drag/Open labels (fine pointer only, native cursor stays).
 - Film grain with a stepped transform flicker.
-- Optional OGL flowmap "liquid light" over the hero (desktop, lazy, paused offscreen).
+- OGL flowmap "liquid light" over the hero: a 17 KB chunk that loads only on large fine-pointer screens with motion allowed, no Save-Data and four or more cores, after the intro and the first mouse move over the hero, in idle time. It reuses the painted hero image as its texture with the same cover crop. It fades in while the cursor moves and fades back to the crisp `<img>` once the flow settles, then stops drawing. It is off in the print state and disposed on context loss.
 
 ### Reduced motion
 ```css
 @media (prefers-reduced-motion: reduce) {
   .grain::before { animation: none; }
   .label-roll > span { transition: none; }
-  /* No Lenis smoothing (lerp 1), no scrub, pin, parallax, marquee velocity, cursor or WebGL.
-     SplitText does not split. Every [data-reveal] gets a single 200ms opacity fade. */
+  /* No smoothing (wheel events go back to the browser, programmatic scrolls are instant), no
+     scrub, pin, parallax, marquee velocity, cursor or WebGL. SplitText does not split. Every
+     [data-reveal] gets a single 200ms opacity fade. tests/reduced-motion.spec.ts checks this. */
 }
 ```
 
@@ -366,7 +372,7 @@ Text rises from SplitText line masks (`yPercent 110 → 0`, 1.1s expo.out, stagg
 - Use sindoor only for CTAs, active states and tiny highlights.
 - Use brass only for hairlines, crop marks, the process thread and ornaments.
 - Keep captions, counters and EXIF outside photographs.
-- Measure every text-over-photo scrim; tune it per photo in `images.ts`.
+- Measure every text-over-photo scrim; tune it per photo in `images.ts` with `tests/contrast-over-image.spec.ts` (as light as the test allows).
 - Design focus states as carefully as hover states.
 - Give every effect a reduced-motion equivalent.
 - Keep brand marks official, upright and static.
@@ -392,7 +398,7 @@ Text rises from SplitText line masks (`yPercent 110 → 0`, 1.1s expo.out, stagg
 | Phone | < 768px | single column; H1 in 4 lines at the top, CTAs at the bottom; stories become a snap carousel; services become an accordion; Instagram 2 columns; no pins, no cursor |
 | Tablet | 768 to 1023px | 6-column grid; still touch behaviour (no pins); badge visible |
 | Desktop | ≥ 1024px | 12-column grid; pins and scrubbed transforms on fine pointers; cursor follower; services cursor preview |
-| Wide | ≥ 1440px | container caps at 1440px; hero type caps at 10.5rem |
+| Wide | ≥ 1440px | container caps at 1440px; hero type caps at 9rem |
 
 - **Touch targets:** at least 44 × 44px, with at least 8px between targets.
 - **Safe areas:** `viewport-fit=cover`; nav, FAB and sheet use `env(safe-area-inset-*)`.
