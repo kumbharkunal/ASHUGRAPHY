@@ -23,9 +23,9 @@ export function HeroMotion({ children }: { children: ReactNode }) {
   const rootRef = useRef<HTMLDivElement>(null);
 
   useGSAP(
-    (_context, contextSafe) => {
+    () => {
       const root = rootRef.current;
-      if (!root || !contextSafe) return;
+      if (!root) return;
       const q = gsap.utils.selector(root);
       const stage = q("[data-hero-stage]")[0] as HTMLElement | undefined;
       const frame = q("[data-hero-frame]")[0] as HTMLElement | undefined;
@@ -62,10 +62,15 @@ export function HeroMotion({ children }: { children: ReactNode }) {
         uiStore.set({ navReady: true });
       });
 
-      mm.add(QUERIES.motion, () => {
+      // Functions that run later (events, timers) are bound to this matchMedia context, never to
+      // the outer useGSAP one: calling an outer-context function from inside its own child context
+      // makes GSAP nest the parent in the child, and reverting that loop overflows the stack
+      // (React's development double mount reverts it straight away).
+      mm.add(QUERIES.motion, (context) => {
         let started = false;
+        let active = true;
 
-        const playIntro = contextSafe(() => {
+        const playIntro = context.add("playIntro", () => {
           if (started) return;
           started = true;
 
@@ -132,17 +137,20 @@ export function HeroMotion({ children }: { children: ReactNode }) {
           if (badge) {
             timeline.fromTo(badge, { autoAlpha: 0, scale: 0.6 }, { autoAlpha: 1, scale: 1, duration: 0.8, ease: "expo.out" }, 1);
           }
-        });
+        }) as () => void;
 
+        // The intro event fires from the preloader's timeline, inside the preloader's own context;
+        // a microtask later no context is active, so the hero's animations stay the hero's.
+        const onIntroOpen = () => queueMicrotask(() => active && playIntro());
         const html = document.documentElement;
         if (html.classList.contains("intro-seen") || uiStore.get().preloaderDone) playIntro();
-        else window.addEventListener(INTRO_OPEN_EVENT, playIntro, { once: true });
+        else window.addEventListener(INTRO_OPEN_EVENT, onIntroOpen, { once: true });
         const failsafe = window.setTimeout(playIntro, 4500);
 
         // The badge's text ring turns slowly, faster on hover, and rests while off screen.
         let spin: gsap.core.Tween | null = null;
-        const speedUp = contextSafe(() => spin && gsap.to(spin, { timeScale: 3, duration: 0.6 }));
-        const slowDown = contextSafe(() => spin && gsap.to(spin, { timeScale: 1, duration: 0.8 }));
+        const speedUp = context.add("speedUp", () => spin && gsap.to(spin, { timeScale: 3, duration: 0.6 })) as () => void;
+        const slowDown = context.add("slowDown", () => spin && gsap.to(spin, { timeScale: 1, duration: 0.8 })) as () => void;
         if (ring && badge) {
           spin = gsap.to(ring, { rotation: 360, transformOrigin: "50% 50%", duration: 24, ease: "none", repeat: -1 });
           ScrollTrigger.create({
@@ -156,7 +164,8 @@ export function HeroMotion({ children }: { children: ReactNode }) {
         }
 
         return () => {
-          window.removeEventListener(INTRO_OPEN_EVENT, playIntro);
+          active = false;
+          window.removeEventListener(INTRO_OPEN_EVENT, onIntroOpen);
           window.clearTimeout(failsafe);
           badge?.removeEventListener("pointerenter", speedUp);
           badge?.removeEventListener("pointerleave", slowDown);
