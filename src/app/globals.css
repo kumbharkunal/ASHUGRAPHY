@@ -144,10 +144,20 @@
     color: var(--color-ink);
   }
 
-  /* Scrollbars on mouse and trackpad devices: a slim taupe pill on a paper track behind a hairline,
-     like a print's margin. Darker on hover, sindoor while dragged; at rest the thumb keeps 3:1
-     against the track. Touch devices keep their native overlay scrollbars. */
+  /* Scrollbars on mouse and trackpad devices. The page's own is replaced by ScrollRail, so the
+     browser's is hidden from the first paint (the head script sets .js before it); without
+     JavaScript the native one stays. Inner scroll areas keep a native bar in the site's colours:
+     a slim taupe pill on a paper track behind a hairline, darker on hover, sindoor while dragged
+     (3:1 against the track at rest). Touch devices keep their native overlay scrollbars. */
   @media (hover: hover) and (pointer: fine) {
+    html.js {
+      scrollbar-width: none;
+    }
+
+    html.js::-webkit-scrollbar {
+      display: none;
+    }
+
     ::-webkit-scrollbar {
       width: 12px;
       height: 12px;
@@ -1244,6 +1254,88 @@ html:not(.deva-ready) {
     box-shadow: inset 0 0 0 1px var(--color-sindoor-deep);
   }
 
+  /* The page scrollbar on mouse and trackpad devices (ScrollRail): a brass hairline along the right
+     edge, like a film strip's edge, and an ink pill with an ivory ring so it reads over photographs
+     as well as paper. It brightens while the page moves; on hover the pill widens and darkens;
+     dragged, it turns sindoor. The 16px rail is the hit area. */
+  .scroll-rail {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: var(--z-fab);
+    width: 1rem;
+    touch-action: none;
+    user-select: none;
+    transition: opacity 400ms var(--ease-ui);
+  }
+
+  .scroll-rail[data-hidden] {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .scroll-rail__track {
+    position: absolute;
+    top: 0.5rem;
+    bottom: 0.5rem;
+    left: 50%;
+    width: 1px;
+    margin-left: -0.5px;
+    background-color: var(--color-brass);
+    opacity: 0.35;
+    transition: opacity 400ms var(--ease-ui);
+  }
+
+  .scroll-rail__thumb {
+    position: absolute;
+    top: 0.5rem;
+    right: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    cursor: grab;
+    will-change: transform;
+  }
+
+  .scroll-rail__pill {
+    width: 4px;
+    height: 100%;
+    border-radius: var(--radius-pill);
+    background-color: var(--color-ink-soft);
+    box-shadow: 0 0 0 1px rgb(var(--ivory-rgb) / 0.75);
+    opacity: 0.7;
+    transition:
+      transform 300ms var(--ease-cinematic),
+      background-color 200ms var(--ease-ui),
+      opacity 300ms var(--ease-ui);
+  }
+
+  .scroll-rail[data-active] .scroll-rail__track,
+  .scroll-rail:hover .scroll-rail__track,
+  .scroll-rail[data-dragging] .scroll-rail__track {
+    opacity: 0.8;
+  }
+
+  .scroll-rail[data-active] .scroll-rail__pill {
+    opacity: 1;
+  }
+
+  .scroll-rail:hover .scroll-rail__pill,
+  .scroll-rail[data-dragging] .scroll-rail__pill {
+    opacity: 1;
+    transform: scaleX(1.75);
+    background-color: var(--color-ink);
+  }
+
+  .scroll-rail[data-dragging] .scroll-rail__thumb {
+    cursor: grabbing;
+  }
+
+  .scroll-rail[data-dragging] .scroll-rail__pill {
+    background-color: var(--color-sindoor);
+  }
+
   /* Wedding date: a button styled as a field; it opens the site's own calendar. */
   .date-trigger {
     display: flex;
@@ -1724,7 +1816,8 @@ html:not(.deva-ready) {
   .page-bg,
   .glass__tint,
   .chip-icon > *,
-  .date-title__caret {
+  .date-title__caret,
+  .scroll-rail__pill {
     transition-duration: 0.01ms;
   }
 }

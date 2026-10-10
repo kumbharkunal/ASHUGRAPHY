@@ -26,7 +26,7 @@ It is a pitch demo. Search engines are kept out (demo mode), every studio fact t
 | Booking | Names, date, city and functions compose a WhatsApp message, shown live before it is sent. The date opens the site's own calendar. Nothing is sent by the site itself. |
 | Footer | Links, official social marks and the studio name set to the page width. |
 
-Also: a floating WhatsApp button, a custom cursor on desktop, film grain, a 404 page ("Lost frame."), link previews for WhatsApp and social apps, and structured data for search engines (no rating, no price).
+Also: a floating WhatsApp button, a custom cursor and scrollbar on desktop, film grain, a 404 page ("Lost frame."), link previews for WhatsApp and social apps, and structured data for search engines (no rating, no price).
 
 ## Run it locally
 
@@ -99,7 +99,7 @@ npm run lh:mobile      # Lighthouse against `npm run start:qa`
 npm run lh:desktop
 ```
 
-The Playwright suite (29 tests in Chromium) covers:
+The Playwright suite (31 tests in Chromium) covers:
 
 - **Mobile menu:** 20 rapid taps, the focus trap, Escape, the background staying still, returning to the same place on the page, and closing on resize.
 - **Accessibility:** axe WCAG 2.2 A/AA scans of the home page at 390 and 1440px after every section has revealed, with reduced motion, with the menu open, with the date picker open (days and months), and the 404 page.
@@ -108,6 +108,7 @@ The Playwright suite (29 tests in Chromium) covers:
 - **Hero contrast:** measured on real pixels at six widths.
 - **Booking form:** validation; the date picker (past days disabled, keyboard picking, Escape, focus and scroll position restored); and the preview being exactly the text that opens in WhatsApp.
 - **Review stack:** buttons, arrow keys and announcements.
+- **Scroll rail:** replaces the page scrollbar on a mouse, follows the scroll and drags the page; touch devices keep their own.
 - **Resilience:** the nav and the content appear even when no script runs.
 - **Overflow:** no horizontal scroll at 390 and 1440px. `SHOT_WIDTHS=all` sweeps 320, 360, 390, 430, 768, 1024, 1280, 1440 and 1920px.
 

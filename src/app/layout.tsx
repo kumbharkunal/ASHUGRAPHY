@@ -7,6 +7,7 @@ import { GsapBoot } from "@/components/layout/GsapBoot";
 import { Grain } from "@/components/layout/Grain";
 import { Navbar } from "@/components/layout/Navbar";
 import { PageBackground } from "@/components/layout/PageBackground";
+import { ScrollRail } from "@/components/layout/ScrollRail";
 import { SmoothScroll } from "@/components/layout/SmoothScroll";
 import { MotionProvider } from "@/components/motion/MotionProvider";
 import { BrandDefs, BrandIcon } from "@/components/ui/BrandIcon";
@@ -86,6 +87,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         </MotionProvider>
         <GsapBoot />
         <CursorLoader />
+        <ScrollRail />
         <Grain />
         <noscript>
           <style>{".preloader{display:none!important}"}</style>

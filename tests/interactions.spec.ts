@@ -165,3 +165,40 @@ test.describe("kind words", () => {
     await context.close();
   });
 });
+
+test.describe("scroll rail", () => {
+  test.skip(({ browserName }) => browserName !== "chromium");
+
+  test("replaces the page scrollbar on a mouse, follows the scroll and drags the page", async ({ browser }) => {
+    const context = await contextFor(browser, 1440);
+    const page = await context.newPage();
+    await page.goto("/", { waitUntil: "networkidle" });
+    const rail = page.locator(".scroll-rail");
+    await expect(rail).not.toHaveAttribute("data-hidden");
+    expect(await page.evaluate(() => getComputedStyle(document.documentElement).scrollbarWidth)).toBe("none");
+
+    const thumb = page.locator(".scroll-rail__thumb");
+    const top = (await thumb.boundingBox())!.y;
+    await page.evaluate(() => window.scrollTo({ top: 3000, behavior: "instant" }));
+    await expect.poll(async () => (await thumb.boundingBox())!.y).toBeGreaterThan(top + 50);
+
+    // Dragging the pill moves the page in proportion.
+    const box = (await thumb.boundingBox())!;
+    const before = await page.evaluate(() => window.scrollY);
+    await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+    await page.mouse.down();
+    await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2 + 100, { steps: 5 });
+    await page.mouse.up();
+    await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(before + 1000);
+    await context.close();
+  });
+
+  test("touch devices keep their native scrollbar", async ({ browser }) => {
+    const context = await contextFor(browser, 390);
+    const page = await context.newPage();
+    await page.goto("/", { waitUntil: "networkidle" });
+    await expect(page.locator(".scroll-rail")).toHaveCount(0);
+    expect(await page.evaluate(() => getComputedStyle(document.documentElement).scrollbarWidth)).toBe("auto");
+    await context.close();
+  });
+});

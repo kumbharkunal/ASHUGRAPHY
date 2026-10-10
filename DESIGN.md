@@ -194,7 +194,11 @@ States:
 `.link-draw` draws a 1px underline from the left on hover or focus and retracts to the right (420ms cinematic). `aria-current` keeps it drawn.
 
 ### Scrollbar
-On mouse and trackpad devices only (touch keeps its native overlay scrollbars): a 12px paper track behind a 1px line hairline, like a print's margin, with a pill thumb in ink 50% (3.2:1 against the track), ink-soft and slightly wider on hover, sindoor while dragged. Firefox gets the same colours with `scrollbar-width: thin`. `html` reserves the gutter (`scrollbar-gutter: stable`), so overlays that hold the page still never shift it sideways.
+On mouse and trackpad devices the page scrollbar is the site's own (`ScrollRail`); touch devices keep their native overlay scrollbars.
+- **Rail:** a 1px brass hairline down the right edge (8px from top and bottom), like a film strip's edge, at 35% and 80% while the page moves or under the pointer. The 16px strip around it is the hit area.
+- **Pill:** 4px wide, ink-soft with a 1px ivory ring so it reads over photographs as well as paper; 70% at rest, full while scrolling. On hover it widens (scaleX 1.75) and turns ink; dragged, it turns sindoor. Its length is the share of the page in view (at least 40px).
+- **Use:** drag the pill (one to one with the page), or press the rail to glide there (instant with reduced motion). Hidden from assistive technology, like a native scrollbar; the keyboard scrolls as usual. Hidden when the page does not scroll, and it holds its place while an overlay holds the page.
+- **Native bar:** hidden from the first paint under `html.js` (no layout shift); without JavaScript it stays. Inner scroll areas keep a native bar in the site's colours (paper track, ink 50% pill, sindoor while dragged).
 
 ### Inputs
 ```css

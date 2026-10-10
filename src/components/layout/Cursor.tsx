@@ -29,6 +29,8 @@ export default function Cursor() {
     const yTo = gsap.quickTo(root, "y", { duration: 0.35, ease: "power3" });
 
     let shown = false;
+    /** Over a target that hides the follower; moving there must not bring it back. */
+    let stepAside = false;
     let current = "";
 
     const setLabel = (next: string) => {
@@ -43,7 +45,7 @@ export default function Cursor() {
       if (event.pointerType !== "mouse") return;
       xTo(event.clientX);
       yTo(event.clientY);
-      if (!shown) {
+      if (!shown && !stepAside) {
         shown = true;
         gsap.set(root, { x: event.clientX, y: event.clientY });
         gsap.to(root, { autoAlpha: 1, duration: 0.2 });
@@ -53,8 +55,10 @@ export default function Cursor() {
     const onOver = (event: PointerEvent) => {
       const target = event.target instanceof Element ? event.target : null;
       if (!target) return;
-      // Hidden over text entry, and over dialogs (the top layer covers the follower anyway).
-      if (target.closest("input, textarea, select, dialog, [contenteditable='true']")) {
+      // Hidden over text entry, over dialogs (the top layer covers the follower anyway) and over
+      // controls that bring their own pointer, such as the scroll rail.
+      stepAside = target.closest("input, textarea, select, dialog, [contenteditable='true'], [data-cursor-hide]") !== null;
+      if (stepAside) {
         gsap.to(root, { autoAlpha: 0, duration: 0.15 });
         shown = false;
         return;
