@@ -548,6 +548,27 @@ html:not(.deva-ready) {
     }
   }
 
+  /* The nav starts above the screen and drops in when the hero intro says so. If the scripts never
+     take over (blocked or failed), it drops in anyway; with no JavaScript at all it is simply
+     there. An animation overrides the server-rendered inline transform; !important is only needed
+     for the no-script case. */
+  html.js:not(.gsap-ready) [data-nav-pill] {
+    animation: nav-failsafe 0.6s var(--ease-cinematic) 4s both;
+  }
+
+  html:not(.js) [data-nav-pill] {
+    transform: none !important;
+  }
+
+  @keyframes nav-failsafe {
+    from {
+      transform: translateY(-140%);
+    }
+    to {
+      transform: none;
+    }
+  }
+
   /* One gentle pulse of the WhatsApp button, transform and opacity only. */
   .fab-pulse {
     border: 2px solid var(--color-wa-green);

@@ -127,6 +127,7 @@ export function Navbar({ ctaIcon, socialIcons }: NavbarProps) {
       >
         <m.nav
           aria-label="Primary"
+          data-nav-pill
           data-tone={tone}
           className={cx(
             "glass pointer-events-auto flex h-14 w-full max-w-[520px] items-center justify-between gap-2 pr-1.5 pl-5",

@@ -1,4 +1,18 @@
+import { networkInterfaces } from "node:os";
 import type { NextConfig } from "next";
+
+/**
+ * This machine's network addresses. The dev server only serves its scripts to localhost unless
+ * other hostnames are allowed, so without this a phone opening http://<this machine's IP>:3000
+ * gets the page with no JavaScript: no nav, no animations. Development only; it has no effect on
+ * production builds.
+ */
+function lanHosts(): string[] {
+  return Object.values(networkInterfaces())
+    .flat()
+    .filter((net) => net !== undefined && net.family === "IPv4" && !net.internal)
+    .map((net) => net!.address);
+}
 
 /**
  * Demo mode keeps the site out of search indexes until the client approves it.
@@ -43,6 +57,7 @@ const securityHeaders = [
 const nextConfig: NextConfig = {
   poweredByHeader: false,
   reactStrictMode: true,
+  allowedDevOrigins: lanHosts(),
   images: {
     formats: ["image/avif", "image/webp"],
     qualities: [70, 75, 85],

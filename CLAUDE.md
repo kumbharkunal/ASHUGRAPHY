@@ -33,12 +33,14 @@ A single-page Next.js 16 demo for Ashugraphy, a wedding photography and films st
 ## Commands
 - `npm run dev` (port 3000), `npm run build`, `npm run build:indexable` (demo mode off, for SEO checks), `npm run start:qa` (port 3107, used by Playwright and Lighthouse)
 - `npm run lint`, `npm run typecheck`, `npm run preflight`, `npm run images:check`
-- `npx playwright test` (Chromium, 25 tests; the QA server on 3107 is reused or started). `SHOT_WIDTHS=all` for the nine-width sweep, `SHOT_WEBKIT=1 ... --project=webkit` for WebKit.
+- `npx playwright test` (Chromium, 26 tests; the QA server on 3107 is reused or started). `SHOT_WIDTHS=all` for the nine-width sweep, `SHOT_WEBKIT=1 ... --project=webkit` for WebKit.
 - `npm run lh:mobile` / `npm run lh:desktop` against `start:qa`. If Lighthouse reports `NO_NAVSTART`, run again or set `CHROME_PATH` to Playwright's Chromium.
 - Port 3000 may already be used by another local project; QA never relies on it.
 
 ## Gotchas
-- Turbopack's persistent cache can serve a stale stylesheet after a CSS edit. If a CSS change is missing from a production build, delete `.next/cache/turbopack` and build again.
+- Turbopack's persistent cache can serve a stale stylesheet after a CSS edit (dev and build). If a CSS change is missing, stop the server, run `npm run clean`, and start again.
+- Phones on the Wi-Fi reach `next dev` by this machine's IP; `allowedDevOrigins` in `next.config.ts` lists the machine's own addresses (read at start-up). Without it the dev server withholds its scripts from the phone.
+- Anything hidden until JavaScript runs needs a CSS failsafe keyed on `.js:not(.gsap-ready)` (reveals, intro, hero clip, nav); `tests/resilience.spec.ts` covers the nav.
 - Test contexts set `screen` equal to the viewport and run Chromium on SwiftShader (see `playwright.config.ts`); without that, a fresh headless page can start landscape for an instant and preload the wrong hero.
 - Keep LF line endings (`.gitattributes` enforces them on commit).
 

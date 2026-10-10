@@ -42,6 +42,8 @@ npm run dev          # http://localhost:3000
 1. download the Zodiak display font from Fontshare into `src/fonts/vendor` (needs a connection on the first run; cached in `.next/cache/fontshare` afterwards);
 2. create a marked placeholder for any missing photo in `/images`, and convert slot-named PNG or JPG files to WebP.
 
+**On your phone:** with the phone on the same Wi-Fi, open the "Network" address that `npm run dev` prints (for example `http://192.168.1.20:3000`). The dev server only serves its scripts to hostnames it allows; `next.config.ts` allows this computer's own network addresses automatically, so restart `npm run dev` if the computer's address changes.
+
 Production build and server:
 
 ```bash
@@ -97,7 +99,7 @@ npm run lh:mobile      # Lighthouse against `npm run start:qa`
 npm run lh:desktop
 ```
 
-The Playwright suite (25 tests in Chromium) covers:
+The Playwright suite (26 tests in Chromium) covers:
 
 - **Mobile menu:** 20 rapid taps, the focus trap, Escape, the background staying still, and closing on resize.
 - **Accessibility:** axe WCAG 2.2 A/AA scans of the home page at 390 and 1440px after every section has revealed, with reduced motion, with the menu open, and the 404 page.
@@ -106,6 +108,7 @@ The Playwright suite (25 tests in Chromium) covers:
 - **Hero contrast:** measured on real pixels at six widths.
 - **Booking form:** validation, past dates, and the preview being exactly the text that opens in WhatsApp.
 - **Review stack:** buttons, arrow keys and announcements.
+- **Resilience:** the nav and the content appear even when no script runs.
 - **Overflow:** no horizontal scroll at 390 and 1440px. `SHOT_WIDTHS=all` sweeps 320, 360, 390, 430, 768, 1024, 1280, 1440 and 1920px.
 
 WebKit: `SHOT_WEBKIT=1 npx playwright test tests/screens.spec.ts --project=webkit`.
@@ -141,7 +144,8 @@ tests/                  Playwright specs
 ## Troubleshooting
 
 - **Port 3000 is busy:** another local project may be using it. Run `npx next dev --port 3001`. Tests and Lighthouse use port 3107.
-- **A CSS change does not show up in a production build:** Turbopack's persistent cache can occasionally serve a stale stylesheet. Delete `.next/cache/turbopack` and build again.
+- **On a phone the nav never appears and nothing animates:** the page's scripts are not running. With `npm run dev`, open the "Network" address it prints and restart the dev server if the computer's address changed (only allowed addresses get the scripts). If scripts fail anyway, the nav and the content still appear after about four seconds, without animation.
+- **A CSS change does not show up:** Turbopack's cache can occasionally serve a stale stylesheet. Stop the server, run `npm run clean` (clears `.next/dev` and `.next/cache/turbopack`), then start it again.
 - **The font download fails:** check the connection to `api.fontshare.com`, then build again. Nothing is committed, so every machine downloads its own copy once.
 - **`EBUSY` or `EPERM` errors in a OneDrive folder:** pause OneDrive sync while working, or move the project outside the synced folder.
 - **Lighthouse reports `NO_NAVSTART`:** an intermittent trace failure in headless Chrome on Windows. Run it again, or point it at Playwright's Chromium with `CHROME_PATH`.

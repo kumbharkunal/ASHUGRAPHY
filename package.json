@@ -9,6 +9,7 @@
   "scripts": {
     "predev": "node scripts/fetch-fonts.mjs && node scripts/ensure-images.mjs",
     "dev": "next dev",
+    "clean": "node -e \"for (const dir of ['.next/dev', '.next/cache/turbopack']) require('fs').rmSync(dir, { recursive: true, force: true })\"",
     "prebuild": "node scripts/fetch-fonts.mjs && node scripts/ensure-images.mjs",
     "build": "next build",
     "build:indexable": "cross-env NEXT_PUBLIC_DEMO_MODE=false npm run build",
