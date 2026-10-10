@@ -193,6 +193,9 @@ States:
 ### Links
 `.link-draw` draws a 1px underline from the left on hover or focus and retracts to the right (420ms cinematic). `aria-current` keeps it drawn.
 
+### Scrollbar
+On mouse and trackpad devices only (touch keeps its native overlay scrollbars): a 12px paper track behind a 1px line hairline, like a print's margin, with a pill thumb in ink 50% (3.2:1 against the track), ink-soft and slightly wider on hover, sindoor while dragged. Firefox gets the same colours with `scrollbar-width: thin`. `html` reserves the gutter (`scrollbar-gutter: stable`), so overlays that hold the page still never shift it sideways.
+
 ### Inputs
 ```css
 .field { min-height: 3.25rem; padding: 0.75rem 1rem; border-radius: var(--radius-field);
