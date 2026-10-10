@@ -208,6 +208,16 @@ States:
 - Errors appear when you leave a field you typed in, or on submit (which focuses the first field that needs attention). A picked date is checked straight away. Errors are sindoor-deep with a WarningCircle icon and are wired with `aria-describedby`.
 - The message preview is built from the same template as the sent text, so the two cannot drift apart. After WhatsApp opens, a polite status confirms it; if the browser blocks the new tab, the status offers a link instead.
 
+### Date picker (wedding date)
+The browser's date input cannot be styled, so the field is a button (`role="combobox"`, `aria-haspopup="dialog"`) that opens the site's own calendar, loaded on first use.
+- **Field:** the same `.field` shell; the value reads "Sun, 14 February 2027", the placeholder "Choose a date" is ink-soft, and a calendar icon sits in a small round well that turns sindoor on hover and while open.
+- **Container:** a native modal dialog. From 640px it is a popover under the field (21.5rem, `--radius-card`, ivory, `--shadow-pop`), placed above the field when there is more room there, and it grows from the field's corner. Below 640px it is a bottom sheet (`--radius-sheet` top corners, ink 40% scrim, a grabber; drag down to close).
+- **Header:** the month in Zodiak 300 with the year in ink-soft; it opens a month grid for jumping ahead (the caret turns over). Previous and next are 40px round buttons with a hairline ring; at the ends of the range they dim and do nothing.
+- **Days:** a 7-column grid, Sunday first, weekday initials in DM Mono. Days are round, 42 to 44px. Today has a sindoor dot under the number; past days are ink 28% and cannot be chosen; the chosen day sits on a sindoor disc that glides to a new choice before the calendar closes. Six rows of height are always reserved, so the panel never jumps between months.
+- **Motion:** months slide in from the side they come from (340ms cinematic); days and months cross-fade; the popover scales in from 0.96, the sheet springs up. Transform and opacity only.
+- **Keyboard:** arrows move by day and week, Home and End to the week's edges, Page Up and Page Down by month (with Shift, by year), Enter picks, Escape closes. Focus starts on the chosen day (or today) and returns to the field. The page holds still while it is open and returns to the same place.
+- **Range:** today to the end of the fifth year ahead.
+
 ### Chips (functions in the booking form)
 Real checkboxes styled as pills, at least 44px tall:
 - **Default:** a 1px line-strong ring and a plus.

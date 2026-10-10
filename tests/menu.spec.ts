@@ -94,6 +94,25 @@ test.describe("mobile menu", () => {
     await context.close();
   });
 
+  test("returns to the same place on the page after closing", async ({ browser }) => {
+    const context = await contextFor(browser, 390);
+    const page = await context.newPage();
+    await page.goto("/", { waitUntil: "networkidle" });
+    // Scroll down, then up a little so the nav shows again.
+    await page.evaluate(() => window.scrollTo({ top: 3300, behavior: "instant" }));
+    await page.waitForTimeout(600);
+    await page.evaluate(() => window.scrollTo({ top: 3000, behavior: "instant" }));
+    await page.waitForTimeout(900);
+    const before = await page.evaluate(() => Math.round(window.scrollY));
+    expect(before).toBeGreaterThan(2000);
+    await page.locator("header button[aria-controls='mobile-menu']").click();
+    await page.waitForTimeout(900);
+    await page.keyboard.press("Escape");
+    await page.waitForTimeout(900);
+    expect(await page.evaluate(() => Math.round(window.scrollY))).toBe(before);
+    await context.close();
+  });
+
   test("closes automatically when the viewport grows to desktop", async ({ browser }) => {
     const context = await contextFor(browser, 390);
     const page = await context.newPage();

@@ -78,6 +78,9 @@ export function unlockScroll() {
   style.width = "";
   if (lenis) {
     lenis.start();
+    // While the body was fixed the page measured one screen tall, and Lenis clamps to the size it
+    // last measured (it re-measures on a delay). Measure now, or the restore lands at the top.
+    lenis.resize();
     lenis.scrollTo(lockedY, { immediate: true, force: true });
   } else {
     window.scrollTo(0, lockedY);

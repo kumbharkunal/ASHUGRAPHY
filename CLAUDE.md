@@ -34,7 +34,7 @@ A single-page Next.js 16 demo for Ashugraphy, a wedding photography and films st
 ## Commands
 - `npm run dev` (port 3000), `npm run build`, `npm run build:indexable` (demo mode off, for SEO checks), `npm run start:qa` (port 3107, used by Playwright and Lighthouse)
 - `npm run lint`, `npm run typecheck`, `npm run preflight`, `npm run images:check`
-- `npx playwright test` (Chromium, 26 tests; the QA server on 3107 is reused or started). `SHOT_WIDTHS=all` for the nine-width sweep, `SHOT_WEBKIT=1 ... --project=webkit` for WebKit.
+- `npx playwright test` (Chromium, 29 tests; the QA server on 3107 is reused or started). `SHOT_WIDTHS=all` for the nine-width sweep, `SHOT_WEBKIT=1 ... --project=webkit` for WebKit.
 - `npm run lh:mobile` / `npm run lh:desktop` against `start:qa`. If Lighthouse reports `NO_NAVSTART`, run again or set `CHROME_PATH` to Playwright's Chromium.
 - Port 3000 may already be used by another local project; QA never relies on it.
 

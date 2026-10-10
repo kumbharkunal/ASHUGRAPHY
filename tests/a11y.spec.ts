@@ -51,6 +51,25 @@ test.describe("accessibility (axe, WCAG 2.2 A and AA)", () => {
     await context.close();
   });
 
+  for (const width of [390, 1440]) {
+    test(`date picker open at ${width}px`, async ({ browser }) => {
+      const context = await contextFor(browser, width);
+      const page = await context.newPage();
+      await page.goto("/", { waitUntil: "networkidle" });
+      await page.evaluate(() => document.getElementById("book")?.scrollIntoView({ behavior: "instant" }));
+      await page.waitForTimeout(1200);
+      await page.locator("#book-date").click();
+      await page.getByRole("dialog", { name: "Choose your wedding date" }).waitFor();
+      await page.waitForTimeout(600);
+      expect(await violations(page)).toEqual([]);
+      // The month grid too.
+      await page.getByRole("button", { name: /choose a month/ }).click();
+      await page.waitForTimeout(400);
+      expect(await violations(page)).toEqual([]);
+      await context.close();
+    });
+  }
+
   test("404 page", async ({ browser }) => {
     const context = await contextFor(browser, 390);
     const page = await context.newPage();

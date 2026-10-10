@@ -53,7 +53,8 @@ export default function Cursor() {
     const onOver = (event: PointerEvent) => {
       const target = event.target instanceof Element ? event.target : null;
       if (!target) return;
-      if (target.closest("input, textarea, select, [contenteditable='true']")) {
+      // Hidden over text entry, and over dialogs (the top layer covers the follower anyway).
+      if (target.closest("input, textarea, select, dialog, [contenteditable='true']")) {
         gsap.to(root, { autoAlpha: 0, duration: 0.15 });
         shown = false;
         return;

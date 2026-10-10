@@ -359,9 +359,20 @@ export const booking = {
     },
     date: {
       label: "Wedding date",
+      placeholder: "Choose a date",
       helper: "An approximate date is fine.",
       error: "Choose a date (an approximate one is fine)",
       pastError: "Choose a date from today onwards",
+      picker: {
+        title: "Choose your wedding date",
+        previousMonth: "Previous month",
+        nextMonth: "Next month",
+        previousYear: "Previous year",
+        nextYear: "Next year",
+        showMonths: "choose a month",
+        showDays: "back to the days",
+        close: "Close",
+      },
     },
     city: {
       label: "City",

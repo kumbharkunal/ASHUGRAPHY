@@ -23,7 +23,7 @@ It is a pitch demo. Search engines are kept out (demo mode), every studio fact t
 | How we work | Four steps on a brass thread; each numeral fills with ink as the thread reaches it. |
 | Kind words | A card stack you can drag, or move with the buttons and arrow keys. |
 | Instagram | A contact sheet of frames that converge as you arrive. |
-| Booking | Names, date, city and functions compose a WhatsApp message, shown live before it is sent. Nothing is sent by the site itself. |
+| Booking | Names, date, city and functions compose a WhatsApp message, shown live before it is sent. The date opens the site's own calendar. Nothing is sent by the site itself. |
 | Footer | Links, official social marks and the studio name set to the page width. |
 
 Also: a floating WhatsApp button, a custom cursor on desktop, film grain, a 404 page ("Lost frame."), link previews for WhatsApp and social apps, and structured data for search engines (no rating, no price).
@@ -99,14 +99,14 @@ npm run lh:mobile      # Lighthouse against `npm run start:qa`
 npm run lh:desktop
 ```
 
-The Playwright suite (26 tests in Chromium) covers:
+The Playwright suite (29 tests in Chromium) covers:
 
-- **Mobile menu:** 20 rapid taps, the focus trap, Escape, the background staying still, and closing on resize.
-- **Accessibility:** axe WCAG 2.2 A/AA scans of the home page at 390 and 1440px after every section has revealed, with reduced motion, with the menu open, and the 404 page.
+- **Mobile menu:** 20 rapid taps, the focus trap, Escape, the background staying still, returning to the same place on the page, and closing on resize.
+- **Accessibility:** axe WCAG 2.2 A/AA scans of the home page at 390 and 1440px after every section has revealed, with reduced motion, with the menu open, with the date picker open (days and months), and the 404 page.
 - **Reduced motion:** no pins, smoothing, scrub or WebGL, and every element visible.
 - **Console:** clean through the first-visit intro, the full scroll and the story viewer.
 - **Hero contrast:** measured on real pixels at six widths.
-- **Booking form:** validation, past dates, and the preview being exactly the text that opens in WhatsApp.
+- **Booking form:** validation; the date picker (past days disabled, keyboard picking, Escape, focus and scroll position restored); and the preview being exactly the text that opens in WhatsApp.
 - **Review stack:** buttons, arrow keys and announcements.
 - **Resilience:** the nav and the content appear even when no script runs.
 - **Overflow:** no horizontal scroll at 390 and 1440px. `SHOT_WIDTHS=all` sweeps 320, 360, 390, 430, 768, 1024, 1280, 1440 and 1920px.

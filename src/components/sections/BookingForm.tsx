@@ -2,9 +2,10 @@
 
 import { Check } from "@phosphor-icons/react/dist/ssr/Check";
 import { Plus } from "@phosphor-icons/react/dist/ssr/Plus";
-import { WarningCircle } from "@phosphor-icons/react/dist/ssr/WarningCircle";
-import { useEffect, useRef, useState, type ComponentPropsWithoutRef, type FormEvent, type ReactNode, type Ref } from "react";
+import { useRef, useState, type ComponentPropsWithoutRef, type FormEvent, type ReactNode, type Ref } from "react";
 import { Button } from "@/components/ui/Button";
+import { DateField } from "@/components/ui/DateField";
+import { FieldNotes, fieldDescribedBy } from "@/components/ui/FieldNotes";
 import { Magnetic } from "@/components/ui/Magnetic";
 import { booking, bookingFunctions, type BookingFunction } from "@/content/site";
 import { gsap, useGSAP } from "@/lib/gsap";
@@ -54,15 +55,8 @@ interface TextFieldProps extends Omit<ComponentPropsWithoutRef<"input">, "id"> {
   inputRef: Ref<HTMLInputElement>;
 }
 
-/**
- * Label above, helper and error below; the error is tied to the input and never relies on colour
- * alone. While an error shows it replaces the helper (the error copy already carries the hint).
- */
-function TextField({ id, label, helper: hint, error, inputRef, ...inputProps }: TextFieldProps) {
-  const helper = error ? undefined : hint;
-  const helperId = helper ? `${id}-helper` : undefined;
-  const errorId = error ? `${id}-error` : undefined;
-  const describedBy = [errorId, helperId].filter(Boolean).join(" ") || undefined;
+/** Label above, helper and error below; the error is tied to the input. */
+function TextField({ id, label, helper, error, inputRef, ...inputProps }: TextFieldProps) {
   return (
     <div>
       <label htmlFor={id} className="block text-sm font-medium text-ink">
@@ -72,21 +66,11 @@ function TextField({ id, label, helper: hint, error, inputRef, ...inputProps }: 
         id={id}
         ref={inputRef}
         aria-invalid={error ? true : undefined}
-        aria-describedby={describedBy}
+        aria-describedby={fieldDescribedBy(id, helper, error)}
         className="field mt-2"
         {...inputProps}
       />
-      {error ? (
-        <p id={errorId} className="mt-2 flex items-start gap-1.5 text-sm text-sindoor-deep">
-          <WarningCircle weight="regular" aria-hidden="true" className="mt-0.5 size-4 shrink-0" />
-          {error}
-        </p>
-      ) : null}
-      {helper ? (
-        <p id={helperId} className="mt-2 text-sm text-ink-soft">
-          {helper}
-        </p>
-      ) : null}
+      <FieldNotes id={id} helper={helper} error={error} />
     </div>
   );
 }
@@ -99,7 +83,7 @@ function TextField({ id, label, helper: hint, error, inputRef, ...inputProps }: 
 export function BookingForm({ submitIcon }: { submitIcon: ReactNode }) {
   const rootRef = useRef<HTMLDivElement>(null);
   const namesRef = useRef<HTMLInputElement>(null);
-  const dateRef = useRef<HTMLInputElement>(null);
+  const dateRef = useRef<HTMLButtonElement>(null);
   const cityRef = useRef<HTMLInputElement>(null);
   const edited = useRef<Record<Field, boolean>>({ ...NO_FIELDS });
   const [values, setValues] = useState<Values>({ names: "", date: "", city: "", functions: [] });
@@ -108,11 +92,6 @@ export function BookingForm({ submitIcon }: { submitIcon: ReactNode }) {
   const [fallbackUrl, setFallbackUrl] = useState<string | null>(null);
   const [opened, setOpened] = useState(false);
   const { fields } = booking;
-
-  // The page is static, so today's date is only known in the browser.
-  useEffect(() => {
-    if (dateRef.current) dateRef.current.min = todayIso();
-  }, []);
 
   useGSAP(
     () => {
@@ -145,10 +124,9 @@ export function BookingForm({ submitIcon }: { submitIcon: ReactNode }) {
     edited.current[field] = true;
     const next = { ...values, [field]: value };
     setValues(next);
-    // A date comes from a picker as a complete value (and mobile pickers may never blur the
-    // input), so it is checked straight away; typed fields wait until you leave them. While a
-    // year is still being typed (0002, 0020, 0202) it is left alone.
-    const checkNow = live[field] || (field === "date" && Number(value.slice(0, 4)) >= 1000);
+    // A date comes from the calendar complete, so it is checked straight away; typed fields
+    // wait until you leave them.
+    const checkNow = live[field] || field === "date";
     if (field === "date" && checkNow && !live.date) setLive((current) => ({ ...current, date: true }));
     if (checkNow) setErrors((current) => ({ ...current, [field]: validate(field, next) }));
   };
@@ -246,16 +224,16 @@ export function BookingForm({ submitIcon }: { submitIcon: ReactNode }) {
               onBlur={() => leave("names")}
             />
             <div className="grid gap-6 sm:grid-cols-2 sm:gap-5">
-              <TextField
+              <DateField
                 id="book-date"
-                type="date"
                 label={fields.date.label}
+                placeholder={fields.date.placeholder}
                 helper={fields.date.helper}
-                required
                 value={values.date}
                 error={errors.date}
-                inputRef={dateRef}
-                onChange={(event) => change("date", event.target.value)}
+                copy={fields.date.picker}
+                triggerRef={dateRef}
+                onChange={(value) => change("date", value)}
                 onBlur={() => leave("date")}
               />
               <TextField
